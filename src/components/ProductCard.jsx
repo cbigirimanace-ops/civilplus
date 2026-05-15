@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { ShoppingCart, Eye, ExternalLink } from 'lucide-react';
 import StarRating from './StarRating';
 import { useCurrency } from '../hooks/useCurrency';
+import { useI18n } from '../i18n/I18nContext';
 import { trackInitiateCheckout } from '../utils/analytics';
 
 const FALLBACK_GRADIENTS = [
@@ -18,6 +19,7 @@ const FALLBACK_GRADIENTS = [
 
 export default function ProductCard({ product, eager = false }) {
   const { convertPrice } = useCurrency();
+  const { t } = useI18n();
 
   const displayPrice = convertPrice(product.price);
   const displayOldPrice = convertPrice(product.oldPrice);
@@ -85,14 +87,14 @@ export default function ProductCard({ product, eager = false }) {
             className="flex-1 flex items-center justify-center gap-1.5 border border-gray-300 text-primary rounded-btn py-2 text-xs font-semibold hover:border-primary hover:bg-gray-50 transition-all mt-2"
           >
             <Eye size={14} />
-            Voir le produit
+            {t('product.viewProduct')}
           </Link>
           <button
             onClick={handleBuy}
             className="flex-1 flex items-center justify-center gap-1.5 bg-primary text-white rounded-btn py-2 text-xs font-semibold hover:bg-gray-800 transition-all mt-2"
           >
             {product.externalLink || product.checkoutLink ? <ExternalLink size={14} /> : <ShoppingCart size={14} />}
-            Acheter
+            {t('product.buyShort')}
           </button>
         </div>
       </div>

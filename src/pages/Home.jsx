@@ -7,26 +7,41 @@ import ProductCard from '../components/ProductCard';
 import CountUpNumber from '../components/CountUpNumber';
 import { products, categories } from '../data/products';
 import { trackPageView } from '../utils/analytics';
-
-const priceRanges = [
-  { label: 'Tous les prix', min: 0, max: Infinity },
-  { label: 'Moins de 2 000 FCFA', min: 0, max: 2000 },
-  { label: '2 000 – 5 000 FCFA', min: 2000, max: 5000 },
-  { label: 'Plus de 5 000 FCFA', min: 5000, max: Infinity },
-];
-
-const metrics = [
-  { icon: Users, number: 200, prefix: '+', suffix: '', label: "ingénieurs utilisant nos produits au quotidien" },
-  { icon: Clock, number: 30, prefix: '+', suffix: 'H', label: "gagnées dans l'élaboration de vos projets" },
-  { icon: ShieldCheck, number: 100, prefix: '', suffix: '%', label: "conformes aux normes actuelles" },
-];
+import { useI18n } from '../i18n/I18nContext';
+import SeoMeta from '../components/SeoMeta';
 
 export default function Home() {
+  const { t, localizeProduct } = useI18n();
+
+  const priceRanges = [
+    { label: t('home.priceAll'), min: 0, max: Infinity },
+    { label: t('home.priceLt2k'), min: 0, max: 2000 },
+    { label: t('home.priceMid'), min: 2000, max: 5000 },
+    { label: t('home.priceGt5k'), min: 5000, max: Infinity },
+  ];
+
+  const metrics = [
+    { icon: Users, number: 200, prefix: '+', suffix: '', label: t('home.metric1') },
+    { icon: Clock, number: 30, prefix: '+', suffix: 'H', label: t('home.metric2') },
+    { icon: ShieldCheck, number: 100, prefix: '', suffix: '%', label: t('home.metric3') },
+  ];
+
+  const categoryLabels = {
+    all: t('home.catAll'),
+    excel: t('home.catExcel'),
+    app: t('home.catApp'),
+    formation: t('home.catFormation'),
+    documents: t('home.catDocuments'),
+  };
+
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedPriceRange, setSelectedPriceRange] = useState(0);
   const [mobileIndex, setMobileIndex] = useState(0);
   const location = useLocation();
+  // unused vars retained for tooling
+  // eslint-disable-next-line no-unused-vars
+  const _t = t;
 
   useEffect(() => {
     trackPageView('Accueil', '/');
@@ -40,7 +55,7 @@ export default function Home() {
     }
   }, [location]);
 
-  const filtered = products.filter((p) => {
+  const filtered = products.map(localizeProduct).filter((p) => {
     const range = priceRanges[selectedPriceRange];
     const matchSearch =
       search.trim() === '' ||
@@ -55,6 +70,11 @@ export default function Home() {
 
   return (
     <div>
+      <SeoMeta
+        title="Civil+ | Outils professionnels pour ingénieurs civils"
+        description={t('home.productsSubtitle')}
+        url="https://civilplus.work/"
+      />
       <HeroCarousel />
 
       {/* Products */}
@@ -66,9 +86,9 @@ export default function Home() {
             viewport={{ once: true }}
             className="text-center mb-10"
           >
-            <h2 className="text-3xl md:text-4xl font-extrabold text-primary mb-3">Nos Produits</h2>
+            <h2 className="text-3xl md:text-4xl font-extrabold text-primary mb-3">{t('home.productsTitle')}</h2>
             <p className="text-gray-500 max-w-xl mx-auto">
-              Des outils professionnels conçus par et pour les ingénieurs civils.
+              {t('home.productsSubtitle')}
             </p>
           </motion.div>
 
@@ -80,7 +100,7 @@ export default function Home() {
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Rechercher un produit..."
+                placeholder={t('home.searchPlaceholder')}
                 className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-card focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm"
               />
             </div>
@@ -95,7 +115,7 @@ export default function Home() {
                       : 'bg-white text-gray-600 border-gray-200 hover:border-primary hover:text-primary'
                   }`}
                 >
-                  {cat.name}
+                  {categoryLabels[cat.id] || cat.name}
                 </button>
               ))}
             </div>
@@ -117,7 +137,7 @@ export default function Home() {
           {filtered.length === 0 ? (
             <div className="text-center py-16 text-gray-400">
               <Search size={40} className="mx-auto mb-3 opacity-30" />
-              <p>Aucun produit ne correspond à votre recherche.</p>
+              <p>{t('home.noResults')}</p>
             </div>
           ) : (
             <>
@@ -173,7 +193,7 @@ export default function Home() {
             viewport={{ once: true }}
             className="text-center text-white text-3xl font-extrabold mb-14"
           >
-            Les chiffres clés
+            {t('home.metricsTitle')}
           </motion.h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-center text-white">
             {metrics.map((metric, i) => {

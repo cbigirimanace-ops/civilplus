@@ -3,59 +3,60 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ShoppingCart, ExternalLink, ChevronLeft, ChevronRight,
-  ArrowLeft, CheckCircle2, Download, Shield, Clock, Users,
+  ArrowLeft, CheckCircle2, Download, Users,
 } from 'lucide-react';
 import StarRating from '../components/StarRating';
 import CountdownTimer from '../components/CountdownTimer';
 import ReviewsCarousel from '../components/ReviewsCarousel';
 import RelatedProducts from '../components/RelatedProducts';
+import ProductBanner from '../components/ProductBanner';
+import ProductFAQ from '../components/ProductFAQ';
+import TrustBadges from '../components/TrustBadges';
+import WhatsAppButton from '../components/WhatsAppButton';
+import SeoMeta from '../components/SeoMeta';
 import { products } from '../data/products';
 import { useCurrency } from '../hooks/useCurrency';
+import { useI18n } from '../i18n/I18nContext';
 import { trackProductView, trackInitiateCheckout } from '../utils/analytics';
 
-// ─── Payment method SVGs ─────────────────────────────────────────────────────
+// ─── Payment method icons (real logos on white background) ──────────────────
 function PaymentIcons() {
+  const card = "border border-gray-200 rounded-md bg-white h-9 px-2 flex items-center justify-center";
   return (
     <div className="flex flex-wrap items-center justify-center gap-2">
       {/* Visa */}
-      <div className="border border-gray-200 rounded px-2 py-1 bg-white h-8 flex items-center" title="Visa">
+      <div className={card} title="Visa">
         <svg viewBox="0 0 48 16" className="h-4 w-auto" aria-label="Visa">
-          <text x="0" y="13" fontFamily="Arial" fontWeight="bold" fontSize="14" fill="#1A1F71">VISA</text>
+          <text x="0" y="13" fontFamily="Arial" fontWeight="900" fontSize="14" fill="#1A1F71">VISA</text>
         </svg>
       </div>
       {/* Mastercard */}
-      <div className="border border-gray-200 rounded px-1.5 py-1 bg-white h-8 flex items-center" title="Mastercard">
+      <div className={card} title="Mastercard">
         <svg viewBox="0 0 38 24" className="h-5 w-auto">
           <circle cx="15" cy="12" r="10" fill="#EB001B" />
           <circle cx="23" cy="12" r="10" fill="#F79E1B" fillOpacity="0.85" />
         </svg>
       </div>
-      {/* Orange Money */}
-      <div className="border border-gray-200 rounded px-2 py-1 bg-white h-8 flex items-center" title="Orange Money">
-        <svg viewBox="0 0 60 20" className="h-4 w-auto">
-          <circle cx="10" cy="10" r="9" fill="#FF6600" />
-          <text x="24" y="14" fontFamily="Arial" fontWeight="bold" fontSize="9" fill="#FF6600">Money</text>
-        </svg>
+      {/* Orange Money — real logo */}
+      <div className={card} title="Orange Money">
+        <img src="/images/payment/orange.png" alt="Orange Money" className="h-6 w-auto object-contain" loading="lazy" />
       </div>
-      {/* MTN Mobile Money */}
-      <div className="border border-gray-200 rounded px-2 py-1 bg-white h-8 flex items-center" title="MTN MoMo">
-        <svg viewBox="0 0 48 20" className="h-4 w-auto">
-          <rect width="48" height="20" rx="3" fill="#FFCC00" />
-          <text x="6" y="14" fontFamily="Arial" fontWeight="bold" fontSize="9" fill="#000">MTN MoMo</text>
-        </svg>
+      {/* MTN Mobile Money — real logo */}
+      <div className={card} title="MTN Mobile Money">
+        <img src="/images/payment/mtn.jpg" alt="MTN MoMo" className="h-6 w-auto object-contain" loading="lazy" />
       </div>
       {/* Wave */}
-      <div className="border border-gray-200 rounded px-2 py-1 bg-white h-8 flex items-center" title="Wave">
-        <svg viewBox="0 0 48 20" className="h-4 w-auto">
-          <rect width="48" height="20" rx="3" fill="#1DC1EB" />
-          <text x="8" y="14" fontFamily="Arial" fontWeight="bold" fontSize="11" fill="#fff">Wave</text>
+      <div className={card} title="Wave">
+        <svg viewBox="0 0 60 24" className="h-5 w-auto">
+          <rect width="60" height="24" rx="4" fill="#1DC1EB" />
+          <text x="11" y="17" fontFamily="Arial" fontWeight="bold" fontSize="13" fill="#fff">Wave</text>
         </svg>
       </div>
-      {/* Moov Money */}
-      <div className="border border-gray-200 rounded px-2 py-1 bg-white h-8 flex items-center" title="Moov Money">
-        <svg viewBox="0 0 52 20" className="h-4 w-auto">
-          <rect width="52" height="20" rx="3" fill="#0055A5" />
-          <text x="4" y="14" fontFamily="Arial" fontWeight="bold" fontSize="9" fill="#fff">Moov Money</text>
+      {/* Moov Money — fixed truncation (wider viewBox, smaller font) */}
+      <div className={card} title="Moov Money">
+        <svg viewBox="0 0 70 24" className="h-5 w-auto">
+          <rect width="70" height="24" rx="4" fill="#0055A5" />
+          <text x="6" y="17" fontFamily="Arial" fontWeight="bold" fontSize="11" fill="#fff">Moov Money</text>
         </svg>
       </div>
     </div>
@@ -63,7 +64,7 @@ function PaymentIcons() {
 }
 
 // ─── Formatted description ───────────────────────────────────────────────────
-function FormattedDescription({ text, features }) {
+function FormattedDescription({ text, features, t }) {
   const lines = text.split('\n');
   return (
     <div className="space-y-4 text-gray-700 text-[15px] leading-relaxed">
@@ -71,7 +72,7 @@ function FormattedDescription({ text, features }) {
         <div className="bg-gray-50 rounded-card p-5 border border-gray-100">
           <p className="font-bold text-primary mb-3 flex items-center gap-2">
             <CheckCircle2 size={17} className="text-green-600" />
-            Ce que vous obtenez
+            {t('product.whatYouGet')}
           </p>
           <ul className="space-y-2">
             {features.map((f, i) => (
@@ -106,11 +107,13 @@ function FormattedDescription({ text, features }) {
   );
 }
 
-// ─── Main component ──────────────────────────────────────────────────────────
+// ─── Main ────────────────────────────────────────────────────────────────────
 export default function ProductDetail() {
   const { slug } = useParams();
   const navigate = useNavigate();
-  const product = products.find((p) => p.slug === slug);
+  const base = products.find((p) => p.slug === slug);
+  const { localizeProduct, t, lang } = useI18n();
+  const product = localizeProduct(base);
   const [selectedImage, setSelectedImage] = useState(0);
   const [showSticky, setShowSticky] = useState(false);
   const { convertPrice } = useCurrency();
@@ -122,7 +125,7 @@ export default function ProductDetail() {
       setSelectedImage(0);
       window.scrollTo(0, 0);
     }
-  }, [product]);
+  }, [product?.id]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -139,10 +142,10 @@ export default function ProductDetail() {
     return (
       <div className="min-h-screen flex items-center justify-center text-center px-4">
         <div>
-          <h1 className="text-3xl font-bold text-primary mb-4">Produit introuvable</h1>
-          <p className="text-gray-500 mb-6">Ce produit n'existe pas ou a été retiré.</p>
+          <h1 className="text-3xl font-bold text-primary mb-4">{t('product.notFound')}</h1>
+          <p className="text-gray-500 mb-6">{t('product.notFoundText')}</p>
           <Link to="/" className="bg-primary text-white px-6 py-3 rounded-btn font-semibold hover:bg-gray-800 transition">
-            Retour à l'accueil
+            {t('product.backHome')}
           </Link>
         </div>
       </div>
@@ -153,13 +156,35 @@ export default function ProductDetail() {
   const displayOldPrice = convertPrice(product.oldPrice);
   const discountPct = Math.round((1 - product.price / product.oldPrice) * 100);
 
+  // JSON-LD Product schema for SEO
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.name,
+    description: product.shortDesc,
+    image: typeof window !== 'undefined' ? `${window.location.origin}${product.thumbnail}` : product.thumbnail,
+    sku: `civilplus-${product.id}`,
+    brand: { '@type': 'Brand', name: 'Civil+' },
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: product.rating,
+      reviewCount: product.reviewCount,
+    },
+    offers: {
+      '@type': 'Offer',
+      url: typeof window !== 'undefined' ? window.location.href : '',
+      priceCurrency: 'XOF',
+      price: product.price,
+      availability: 'https://schema.org/InStock',
+      itemCondition: 'https://schema.org/NewCondition',
+    },
+  };
+
   const handleBuy = () => {
     trackInitiateCheckout(product);
     const target = product.checkoutLink || product.externalLink;
     if (target) {
       window.open(target, '_blank', 'noopener,noreferrer');
-    } else {
-      alert(`Redirection vers le paiement pour : ${product.name}`);
     }
   };
 
@@ -168,23 +193,30 @@ export default function ProductDetail() {
 
   return (
     <div className="min-h-screen bg-white pb-24 md:pb-0">
-      {/* Reviews auto-scroll carousel — constrained to max-w-7xl with edge fade */}
+      <SeoMeta
+        title={`${product.name} — Civil+`}
+        description={product.shortDesc}
+        image={typeof window !== 'undefined' ? `${window.location.origin}${product.thumbnail}` : product.thumbnail}
+        url={typeof window !== 'undefined' ? window.location.href : undefined}
+        type="product"
+        jsonLd={jsonLd}
+      />
+
       <ReviewsCarousel reviews={product.reviews} />
 
-      {/* Breadcrumb */}
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-4">
         <button
           onClick={() => navigate(-1)}
           className="flex items-center gap-2 text-gray-500 hover:text-primary text-sm transition"
         >
           <ArrowLeft size={16} />
-          Retour
+          {t('product.back')}
         </button>
       </div>
 
       {/* ── Main product section ── */}
       <div className="max-w-7xl mx-auto px-4 md:px-6 pb-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
 
           {/* ── Left: Image gallery ── */}
           <motion.div
@@ -192,32 +224,46 @@ export default function ProductDetail() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
           >
-            {/* Main image */}
+            {/* Main image — blurred bg + contained foreground (preserves aspect) */}
             <div className="relative rounded-card overflow-hidden bg-gray-100 mb-3 aspect-square">
               <AnimatePresence mode="wait">
-                <motion.img
+                <motion.div
                   key={selectedImage}
-                  src={product.images[selectedImage]}
-                  alt={product.name}
-                  loading={selectedImage === 0 ? 'eager' : 'lazy'}
-                  decoding="async"
-                  fetchpriority={selectedImage === 0 ? 'high' : 'auto'}
-                  className="w-full h-full object-cover"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.2 }}
-                  onError={(e) => { e.currentTarget.style.opacity = '0.2'; }}
-                />
+                  className="absolute inset-0"
+                >
+                  {/* Blurred fill background */}
+                  <img
+                    src={product.images[selectedImage]}
+                    alt=""
+                    aria-hidden="true"
+                    className="absolute inset-0 w-full h-full object-cover scale-110 blur-2xl opacity-60"
+                  />
+                  {/* Foreground image — keeps aspect ratio */}
+                  <img
+                    src={product.images[selectedImage]}
+                    alt={product.name}
+                    loading={selectedImage === 0 ? 'eager' : 'lazy'}
+                    decoding="async"
+                    fetchpriority={selectedImage === 0 ? 'high' : 'auto'}
+                    className="relative w-full h-full object-contain"
+                    onError={(e) => { e.currentTarget.style.opacity = '0.2'; }}
+                  />
+                </motion.div>
               </AnimatePresence>
               {product.images.length > 1 && (
                 <>
                   <button onClick={prevImage} disabled={selectedImage === 0}
-                    className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-1.5 shadow disabled:opacity-30 transition">
+                    aria-label="Image précédente"
+                    className="absolute z-10 left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-1.5 shadow disabled:opacity-30 transition">
                     <ChevronLeft size={18} />
                   </button>
                   <button onClick={nextImage} disabled={selectedImage === product.images.length - 1}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-1.5 shadow disabled:opacity-30 transition">
+                    aria-label="Image suivante"
+                    className="absolute z-10 right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-1.5 shadow disabled:opacity-30 transition">
                     <ChevronRight size={18} />
                   </button>
                 </>
@@ -229,30 +275,25 @@ export default function ProductDetail() {
               <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-thin">
                 {product.images.map((img, i) => (
                   <button key={i} onClick={() => setSelectedImage(i)}
-                    className={`flex-shrink-0 w-16 h-16 md:w-20 md:h-20 rounded overflow-hidden border-2 transition ${
+                    aria-label={`Vue ${i + 1}`}
+                    className={`relative flex-shrink-0 w-16 h-16 md:w-20 md:h-20 rounded overflow-hidden border-2 transition ${
                       selectedImage === i ? 'border-primary' : 'border-gray-200 hover:border-gray-400'
                     }`}>
-                    <img src={img} alt={`Vue ${i + 1}`}
+                    <img src={img} alt=""
+                      aria-hidden="true"
+                      className="absolute inset-0 w-full h-full object-cover scale-110 blur-md opacity-50" />
+                    <img src={img} alt=""
                       loading="lazy" decoding="async"
-                      className="w-full h-full object-cover"
+                      className="relative w-full h-full object-contain"
                       onError={(e) => { e.currentTarget.style.background = '#f0f0f0'; }} />
                   </button>
                 ))}
               </div>
             )}
 
-            {/* Trust badges */}
-            <div className="mt-4 grid grid-cols-3 gap-3">
-              {[
-                { icon: Shield, label: 'Achat sécurisé' },
-                { icon: Download, label: 'Accès immédiat' },
-                { icon: Clock, label: 'Accès à vie' },
-              ].map(({ icon: Icon, label }) => (
-                <div key={label} className="flex flex-col items-center gap-1 text-center border border-gray-100 rounded-card p-3">
-                  <Icon size={20} className="text-gray-500" />
-                  <span className="text-xs text-gray-500">{label}</span>
-                </div>
-              ))}
+            {/* Trust badges — compact under gallery */}
+            <div className="mt-5">
+              <TrustBadges variant="compact" />
             </div>
           </motion.div>
 
@@ -269,79 +310,101 @@ export default function ProductDetail() {
             <div className="flex flex-wrap items-center gap-3 text-sm text-gray-500">
               <span className="flex items-center gap-1">
                 <Users size={14} />
-                <strong className="text-primary">{product.reviewCount}</strong> avis
+                <strong className="text-primary">{product.reviewCount}</strong> {t('product.reviews')}
               </span>
               <span className="flex items-center gap-1">
                 <Download size={14} />
-                <strong className="text-primary">{product.sold}+</strong> achats
+                <strong className="text-primary">{product.sold}+</strong> {t('product.purchases')}
               </span>
               <span className="px-2 py-0.5 bg-gray-100 rounded-full text-xs capitalize">
-                {product.category === 'app' ? 'Application' : product.category === 'excel' ? 'Fichier' : product.category}
+                {product.category === 'app' ? (lang === 'en' ? 'Application' : 'Application')
+                  : product.category === 'excel' ? 'Excel/Word'
+                  : product.category}
               </span>
             </div>
 
+            {/* Title */}
             <h1 className="text-xl md:text-2xl font-extrabold text-primary leading-tight">
               {product.name}
             </h1>
 
+            {/* Banner — below title, above stars */}
+            {product.banner && (
+              <ProductBanner slug={product.slug} alt={product.name} />
+            )}
+
+            {/* Stars */}
             <div className="flex items-center gap-3">
               <StarRating rating={product.rating} size={18} />
-              <span className="text-sm text-gray-500">{product.reviewCount} avis vérifiés</span>
-            </div>
-
-            {/* Price */}
-            <div className="flex items-baseline gap-3 flex-wrap">
-              <span className="text-gray-400 line-through text-base">{displayOldPrice}</span>
-              <span className="text-primary font-extrabold text-4xl">{displayPrice}</span>
-              <span className="bg-red-100 text-red-600 text-sm font-bold px-2 py-0.5 rounded-full">
-                -{discountPct}%
+              <span className="text-sm text-gray-500">
+                {product.reviewCount} {t('product.verifiedReviews')}
               </span>
             </div>
 
-            {/* Countdown (timer only — no progress bar) */}
+            {/* Price block — mobile: discount badge ABOVE price */}
+            <div className="flex flex-col gap-2">
+              <div className="md:hidden">
+                <span className="inline-block bg-red-100 text-red-600 text-xs font-bold px-2.5 py-1 rounded-full">
+                  -{discountPct}% {t('product.discount')}
+                </span>
+              </div>
+              <div className="flex items-baseline gap-3 flex-wrap">
+                <span className="text-gray-400 line-through text-sm">{displayOldPrice}</span>
+                <span className="text-primary font-extrabold text-2xl md:text-3xl">{displayPrice}</span>
+                <span className="hidden md:inline-block bg-red-100 text-red-600 text-xs font-bold px-2 py-0.5 rounded-full">
+                  -{discountPct}% {t('product.discount')}
+                </span>
+              </div>
+            </div>
+
+            {/* Countdown */}
             {product.countdown && (
               <CountdownTimer
                 showProgress={false}
                 storageKey={`countdown_${product.slug}`}
+                hours={72}
               />
             )}
+
+            {/* ── Generous spacing between countdown and short desc ── */}
+            <div className="h-2 md:h-4" />
 
             {/* Short desc */}
             <p className="text-gray-600 text-sm leading-relaxed border-l-4 border-gray-200 pl-3">
               {product.shortDesc}
             </p>
 
-            {/* CTA buttons */}
-            <div className="flex flex-col gap-3 pt-1">
+            {/* CTA buttons — smaller height + font */}
+            <div className="flex flex-col gap-2.5 pt-1">
               {product.externalLink && (
                 <a
                   href={product.externalLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 border-2 border-primary text-primary rounded-btn py-3.5 font-bold hover:bg-primary hover:text-white transition-all text-base"
+                  className="flex items-center justify-center gap-2 border-2 border-primary text-primary rounded-btn py-2.5 font-bold hover:bg-primary hover:text-white transition-all text-sm"
                 >
-                  <ExternalLink size={18} />
-                  Voir la description complète du produit
+                  <ExternalLink size={16} />
+                  {t('product.viewFull')}
                 </a>
               )}
               <button
                 onClick={handleBuy}
-                className="flex items-center justify-center gap-2 bg-primary hover:bg-gray-800 text-white rounded-btn py-4 font-bold text-lg shadow-lg hover:scale-[1.02] transition-all"
+                className="flex items-center justify-center gap-2 bg-primary hover:bg-gray-800 text-white rounded-btn py-3 font-bold text-base shadow-lg hover:scale-[1.02] transition-all"
               >
-                {product.externalLink ? <ExternalLink size={20} /> : <ShoppingCart size={20} />}
-                Télécharger maintenant
+                {product.externalLink || product.checkoutLink ? <ExternalLink size={18} /> : <ShoppingCart size={18} />}
+                {t('product.buy')}
               </button>
             </div>
 
             {/* Payment methods — centered relative to button */}
-            <div className="flex flex-col items-center gap-2">
-              <p className="text-xs text-gray-500">Moyens de paiement disponibles</p>
+            <div className="flex flex-col items-center gap-2 pt-1">
+              <p className="text-xs text-gray-500">{t('product.paymentMethods')}</p>
               <PaymentIcons />
             </div>
           </motion.div>
         </div>
 
-        {/* Video section — centered relative to full block */}
+        {/* Video — centered */}
         {product.videoUrl && (
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -349,7 +412,7 @@ export default function ProductDetail() {
             viewport={{ once: true }}
             className="mt-14"
           >
-            <h2 className="text-xl font-bold text-primary mb-4 text-center">Vidéo de présentation</h2>
+            <h2 className="text-xl font-bold text-primary mb-4 text-center">{t('product.videoTitle')}</h2>
             <div className="rounded-card overflow-hidden aspect-video bg-black mx-auto max-w-3xl shadow-lg">
               <iframe
                 src={product.videoUrl}
@@ -363,7 +426,7 @@ export default function ProductDetail() {
           </motion.div>
         )}
 
-        {/* Description — centered relative to upper block */}
+        {/* Description — centered */}
         <motion.div
           id="description"
           initial={{ opacity: 0, y: 20 }}
@@ -372,16 +435,29 @@ export default function ProductDetail() {
           className="mt-14 mx-auto max-w-3xl"
         >
           <h2 className="text-2xl font-extrabold text-primary mb-6 text-center">
-            Description du produit
+            {t('product.descriptionTitle')}
           </h2>
-          <FormattedDescription text={product.fullDesc} features={product.features} />
+          <FormattedDescription text={product.fullDesc} features={product.features} t={t} />
+
+          {/* WhatsApp CTA below detailed description */}
+          <div className="flex justify-center mt-10">
+            <WhatsAppButton context={`product:${product.slug}`} message={`Bonjour, je suis intéressé(e) par : ${product.name}`} />
+          </div>
         </motion.div>
+
+        {/* FAQ */}
+        <ProductFAQ faq={product.faq} />
+
+        {/* Trust badges (full version) */}
+        <section className="mt-14 max-w-5xl mx-auto">
+          <TrustBadges />
+        </section>
       </div>
 
-      {/* ── Related products ── */}
+      {/* Related products */}
       <RelatedProducts currentSlug={product.slug} />
 
-      {/* ── Sticky bottom bar ── */}
+      {/* Sticky bottom bar */}
       <AnimatePresence>
         {showSticky && (
           <motion.div
@@ -397,6 +473,7 @@ export default function ProductDetail() {
                   src={product.thumbnail}
                   alt={product.name}
                   className="w-full h-full object-cover"
+                  loading="lazy"
                   onError={(e) => { e.currentTarget.style.opacity = '0.2'; }}
                 />
               </div>
@@ -412,8 +489,8 @@ export default function ProductDetail() {
                 onClick={handleBuy}
                 className="flex-shrink-0 flex items-center gap-1.5 bg-primary hover:bg-gray-800 text-white rounded-btn px-3 md:px-5 py-2.5 font-bold text-xs md:text-sm transition"
               >
-                {product.externalLink ? <ExternalLink size={14} /> : <ShoppingCart size={14} />}
-                <span className="hidden sm:inline">Télécharger</span>
+                {product.externalLink || product.checkoutLink ? <ExternalLink size={14} /> : <ShoppingCart size={14} />}
+                <span className="hidden sm:inline">{t('product.buyShort')}</span>
               </button>
             </div>
           </motion.div>

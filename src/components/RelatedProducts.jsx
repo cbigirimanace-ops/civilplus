@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ShoppingCart, ExternalLink } from 'lucide-react';
-import { ThumbsUp } from 'lucide-react';
+import { ShoppingCart, ExternalLink, ThumbsUp } from 'lucide-react';
 import { products as allProducts } from '../data/products';
 import { useCurrency } from '../hooks/useCurrency';
+import { useI18n } from '../i18n/I18nContext';
 import { trackInitiateCheckout } from '../utils/analytics';
 
 const FALLBACK_GRADIENTS = [
@@ -19,7 +19,11 @@ const FALLBACK_GRADIENTS = [
 
 export default function RelatedProducts({ currentSlug, limit = 4 }) {
   const { convertPrice } = useCurrency();
-  const related = allProducts.filter((p) => p.slug !== currentSlug).slice(0, limit);
+  const { t, localizeProduct } = useI18n();
+  const related = allProducts
+    .filter((p) => p.slug !== currentSlug)
+    .slice(0, limit)
+    .map(localizeProduct);
 
   if (related.length === 0) return null;
 
@@ -27,7 +31,7 @@ export default function RelatedProducts({ currentSlug, limit = 4 }) {
     <section className="bg-white py-14 border-t border-gray-100">
       <div className="max-w-7xl mx-auto px-4 md:px-6">
         <h2 className="text-xl md:text-2xl font-extrabold text-primary mb-8">
-          Autres produits qui pourraient vous intéresser
+          {t('product.relatedTitle')}
         </h2>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5">
@@ -103,7 +107,7 @@ export default function RelatedProducts({ currentSlug, limit = 4 }) {
                     ) : (
                       <ShoppingCart size={14} />
                     )}
-                    Acheter maintenant
+                    {t('product.buyNow')}
                   </button>
                 </div>
               </motion.div>

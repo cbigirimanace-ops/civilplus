@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Quote } from 'lucide-react';
 import { motion } from 'framer-motion';
 import StarRating from './StarRating';
+import { useI18n } from '../i18n/I18nContext';
 
 /**
  * Auto-scrolling reviews carousel.
@@ -9,6 +10,7 @@ import StarRating from './StarRating';
  * with edge fade-out via CSS mask.
  */
 export default function ReviewsCarousel({ reviews = [] }) {
+  const { t } = useI18n();
   const trackRef = useRef(null);
   const animRef = useRef(null);
   const posRef = useRef(0);
@@ -43,7 +45,7 @@ export default function ReviewsCarousel({ reviews = [] }) {
     <div className="bg-gray-50 border-b border-gray-100 py-6 md:py-8">
       <div className="max-w-7xl mx-auto px-4 md:px-6">
         <h2 className="text-sm md:text-base font-bold text-primary mb-4 uppercase tracking-wide">
-          Ce que disent nos clients
+          {t('product.customerReviews')}
         </h2>
 
         {/* Constrained track with edge fade mask */}

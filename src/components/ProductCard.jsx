@@ -1,91 +1,93 @@
-import { motion } from 'framer-motion';
-import { Eye, ShoppingCart, ExternalLink } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { ShoppingCart, Eye, ExternalLink } from 'lucide-react';
 import StarRating from './StarRating';
+import { useCurrency } from '../hooks/useCurrency';
 import { trackInitiateCheckout } from '../utils/analytics';
 
-export default function ProductCard({ product, convertPrice }) {
+const FALLBACK_GRADIENTS = [
+  'linear-gradient(135deg,#1a1a2e 0%,#16213e 100%)',
+  'linear-gradient(135deg,#0d3b66 0%,#1b6ca8 100%)',
+  'linear-gradient(135deg,#1a3a1a 0%,#2d6a2d 100%)',
+  'linear-gradient(135deg,#3d0c02 0%,#8b2500 100%)',
+  'linear-gradient(135deg,#1a0533 0%,#4a0080 100%)',
+  'linear-gradient(135deg,#0f2027 0%,#2c5364 100%)',
+  'linear-gradient(135deg,#232526 0%,#414345 100%)',
+  'linear-gradient(135deg,#24243e 0%,#302b63 100%)',
+];
+
+export default function ProductCard({ product }) {
+  const { convertPrice } = useCurrency();
+
+  const displayPrice = convertPrice(product.price);
+  const displayOldPrice = convertPrice(product.oldPrice);
+  const discountPct = Math.round((1 - product.price / product.oldPrice) * 100);
+  const fallback = FALLBACK_GRADIENTS[(product.id - 1) % FALLBACK_GRADIENTS.length];
+
   const handleBuy = (e) => {
     e.preventDefault();
+    e.stopPropagation();
     trackInitiateCheckout(product);
     if (product.externalLink) {
       window.open(product.externalLink, '_blank', 'noopener,noreferrer');
     } else {
-      // Redirect to detail page with buy intent
       window.location.href = `/produits/${product.slug}#acheter`;
     }
   };
 
-  const displayPrice = convertPrice ? convertPrice(product.price) : `${product.price.toLocaleString('fr-FR')} ${product.currency}`;
-  const displayOldPrice = convertPrice ? convertPrice(product.oldPrice) : `${product.oldPrice.toLocaleString('fr-FR')} ${product.currency}`;
-
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      whileHover={{ y: -6 }}
-      transition={{ duration: 0.3 }}
-      className="group relative bg-white rounded-card shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col"
+      whileHover={{ scale: 1.025, y: -4 }}
+      transition={{ type: 'spring', stiffness: 300, damping: 22 }}
+      className="bg-white rounded-card shadow-sm hover:shadow-xl transition-shadow duration-300 overflow-hidden flex flex-col"
     >
-      {/* Discount badge */}
-      <div className="absolute top-3 left-3 z-10 bg-accent text-white text-xs font-bold px-2.5 py-1 rounded-full">
-        -{Math.round((1 - product.price / product.oldPrice) * 100)}%
+      {/* Thumbnail */}
+      <div
+        className="relative w-full aspect-[4/3] overflow-hidden"
+        style={{ background: fallback }}
+      >
+        <img
+          src={product.thumbnail}
+          alt={product.name}
+          className="w-full h-full object-cover"
+          onError={(e) => { e.currentTarget.style.display = 'none'; }}
+        />
+        {/* Discount badge */}
+        <span className="absolute top-3 left-3 bg-black text-white text-xs font-bold px-2.5 py-1 rounded-full">
+          -{discountPct}%
+        </span>
       </div>
 
-      {/* Category badge */}
-      <div className="absolute top-3 right-3 z-10 bg-primary/80 text-white text-xs font-medium px-2 py-0.5 rounded-full capitalize">
-        {product.category}
-      </div>
+      {/* Body */}
+      <div className="flex flex-col gap-3 p-4 flex-1">
+        <h3 className="text-sm font-bold text-primary leading-snug line-clamp-2">
+          {product.name}
+        </h3>
 
-      {/* Image */}
-      <Link to={`/produits/${product.slug}`} className="block overflow-hidden">
-        <div className="relative h-52 overflow-hidden bg-gray-100">
-          <img
-            src={product.thumbnail}
-            alt={product.name}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-            loading="lazy"
-          />
-        </div>
-      </Link>
-
-      {/* Content */}
-      <div className="flex flex-col flex-1 p-4">
-        <Link to={`/produits/${product.slug}`}>
-          <h3 className="text-sm font-bold text-primary leading-tight mb-2 line-clamp-2 group-hover:text-accent transition-colors">
-            {product.name}
-          </h3>
-        </Link>
-
-        <p className="text-gray-500 text-xs mb-3 line-clamp-2">{product.shortDesc}</p>
-
-        {/* Stars */}
-        <div className="flex items-center gap-2 mb-3">
+        <div className="flex items-center gap-2">
           <StarRating rating={product.rating} size={14} />
-          <span className="text-xs text-gray-500">({product.reviewCount})</span>
+          <span className="text-xs text-gray-400">({product.reviewCount})</span>
         </div>
 
-        {/* Price */}
-        <div className="mb-4">
-          <span className="text-gray-400 line-through text-xs mr-2">{displayOldPrice}</span>
-          <span className="text-accent font-extrabold text-lg">{displayPrice}</span>
+        <div className="flex items-baseline gap-2 mt-auto">
+          <span className="text-gray-400 line-through text-xs">{displayOldPrice}</span>
+          <span className="text-primary font-extrabold text-lg">{displayPrice}</span>
         </div>
 
-        {/* Buttons — always visible on mobile, slide up on hover on desktop */}
-        <div className="mt-auto flex flex-col gap-2 md:translate-y-2 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100 transition-all duration-300">
+        {/* Buttons — always visible */}
+        <div className="flex gap-2 pt-1">
           <Link
             to={`/produits/${product.slug}`}
-            className="flex items-center justify-center gap-2 border border-primary text-primary rounded-btn py-2 text-sm font-semibold hover:bg-primary hover:text-white transition-all duration-200"
+            className="flex-1 flex items-center justify-center gap-1.5 border border-gray-300 text-primary rounded-btn py-2 text-xs font-semibold hover:border-primary hover:bg-gray-50 transition-all"
           >
-            <Eye size={15} />
+            <Eye size={14} />
             Voir le produit
           </Link>
           <button
             onClick={handleBuy}
-            className="flex items-center justify-center gap-2 bg-accent hover:bg-accent-dark text-white rounded-btn py-2 text-sm font-semibold transition-all duration-200"
+            className="flex-1 flex items-center justify-center gap-1.5 bg-primary text-white rounded-btn py-2 text-xs font-semibold hover:bg-gray-800 transition-all"
           >
-            {product.externalLink ? <ExternalLink size={15} /> : <ShoppingCart size={15} />}
+            {product.externalLink ? <ExternalLink size={14} /> : <ShoppingCart size={14} />}
             Acheter
           </button>
         </div>

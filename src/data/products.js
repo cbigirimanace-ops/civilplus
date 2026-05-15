@@ -1,221 +1,302 @@
+// ─── Product-specific reviews ────────────────────────────────────────────────
+
+const reviewsPackBA = [
+  { id: 'pba-1', author: 'Kofi Asante', country: "Côte d'Ivoire", rating: 5, text: "Incroyable ! Les fichiers de dimensionnement béton armé m'ont fait gagner un temps précieux sur mon projet de R+3. Tout est déjà paramétré selon les normes Eurocodes." },
+  { id: 'pba-2', author: 'Mamadou Diallo', country: 'Sénégal', rating: 5, text: "Le pack est extrêmement complet. J'utilise les fichiers de calcul des semelles et poutres tous les jours. Un investissement qui vaut largement son prix." },
+  { id: 'pba-3', author: 'Ibrahim Traoré', country: 'Burkina Faso', rating: 4, text: 'Très bon pack. Les fichiers sont bien organisés et accompagnés de notes de calcul claires. Quelques ajustements pour les normes locales, mais globalement excellent.' },
+  { id: 'pba-4', author: 'Ange Bossou', country: 'Bénin', rating: 5, text: "Civil+ encore une fois au top ! J'avais déjà le Manager Toolkit et ce pack est du même niveau de qualité. Je recommande à tous mes collègues ingénieurs." },
+  { id: 'pba-5', author: 'Charles Mouamba', country: 'Congo-Brazzaville', rating: 5, text: 'Les 60 fichiers couvrent vraiment tout ce qu\'on rencontre au bureau d\'études : poteaux, dalles, fondations... tout y est. Merci Civil+!' },
+];
+
+const reviewsManagerToolkit = [
+  { id: 'mt-1', author: 'Reine Adjovi', country: 'Togo', rating: 5, text: "Manager Toolkit a révolutionné ma façon de gérer mes chantiers. Le suivi des dépenses en temps réel et la génération automatique des rapports sont un vrai plus." },
+  { id: 'mt-2', author: 'Jean-Baptiste Konan', country: "Côte d'Ivoire", rating: 5, text: "L'application est intuitive et puissante. J'ai produit une étude de prix complète en moins de 2 heures là où j'en avais besoin de 8 avant. Exceptionnel." },
+  { id: 'mt-3', author: 'Fatima Ndiaye', country: 'Sénégal', rating: 4, text: 'Super outil de gestion de projet. Le module de planning Gantt intégré est très pratique. J\'aurais aimé un export PDF plus flexible, mais ça reste excellent.' },
+  { id: 'mt-4', author: 'Eric Dembélé', country: 'Mali', rating: 5, text: "La meilleure application pour les ingénieurs africains. Elle prend en compte nos réalités terrain. Le support est réactif et les mises à jour sont régulières." },
+  { id: 'mt-5', author: 'Armel Bikié', country: 'Cameroun', rating: 5, text: 'Utilisé sur 3 projets consécutifs. Chaque fois le gain de temps est énorme, surtout pour la création des BPU et DQE. Je ne peux plus travailler sans cet outil.' },
+];
+
+const reviewsQualite = [
+  { id: 'qlt-1', author: 'Sophie Amoussou', country: 'Bénin', rating: 5, text: 'Les fiches de contrôle qualité sont professionnelles et directement utilisables sur chantier. Elles m\'ont permis de standardiser tous nos contrôles d\'exécution.' },
+  { id: 'qlt-2', author: 'Patrick Mensah', country: 'Ghana', rating: 4, text: 'Pack très utile pour la mise en place d\'un système QSE sur nos chantiers. Les modèles sont complets et bien structurés. Valeur ajoutée certaine.' },
+  { id: 'qlt-3', author: 'Nadia Coulibaly', country: "Côte d'Ivoire", rating: 5, text: 'Nous avons décroché notre certification ISO grâce en partie à ces fiches de contrôle. La qualité des documents est remarquable. Merci Civil+.' },
+  { id: 'qlt-4', author: 'Omar Sy', country: 'Sénégal', rating: 5, text: 'Indispensable pour tout chef de projet soucieux de la qualité. Les 30+ modèles couvrent toutes les phases du chantier. Un gain de temps considérable.' },
+];
+
+const reviewsGantt = [
+  { id: 'gnt-1', author: 'Thierry Akakpo', country: 'Togo', rating: 4, text: 'Template Gantt très bien conçu. J\'ai pu planifier un projet de construction de 18 mois en quelques heures. Les formules automatiques font un vrai travail de fond.' },
+  { id: 'gnt-2', author: 'Viviane Koffi', country: "Côte d'Ivoire", rating: 4, text: 'Simple à prendre en main et efficace. Le template gère automatiquement les dépendances de tâches. Idéal pour les réunions de suivi avec les clients.' },
+  { id: 'gnt-3', author: 'Boris Ngounou', country: 'Cameroun', rating: 5, text: 'Excellent rapport qualité-prix. Le template est personnalisable et bien documenté. Je l\'utilise sur tous mes projets de VRD désormais.' },
+];
+
+const reviewsFinance = [
+  { id: 'fin-1', author: 'Rostand Feussi', country: 'Cameroun', rating: 5, text: 'Le Copilote de Gestion Financière est une vraie révélation. Suivi des décaissements, état d\'avancement financier, tableau de bord... tout est automatisé. Bravo !' },
+  { id: 'fin-2', author: 'Sandrine Aïzoun', country: 'Bénin', rating: 4, text: 'Outil pratique pour garder le cap financier sur ses projets. Les graphiques automatiques permettent de visualiser rapidement l\'état du budget. Recommandé.' },
+  { id: 'fin-3', author: 'Wilfried Gbaguidi', country: 'Bénin', rating: 5, text: 'J\'ai pu identifier un dépassement de budget en temps réel grâce à cet outil. Il m\'a évité une perte financière importante. Un must-have pour tout PM.' },
+];
+
+const reviewsFormationExcel = [
+  { id: 'fxl-1', author: 'Serge Bidossessi', country: 'Bénin', rating: 5, text: 'Formation au top ! En quelques semaines j\'ai atteint un niveau expert. Les exercices pratiques appliqués au génie civil font vraiment la différence.' },
+  { id: 'fxl-2', author: 'Cédric Hounsou', country: 'Bénin', rating: 5, text: 'Enfin une formation Excel pensée pour les ingénieurs ! Le contenu est dense mais bien structuré. J\'ai créé mes propres outils de calcul dès la fin de la formation.' },
+  { id: 'fxl-3', author: 'Aurélie Zannou', country: 'Bénin', rating: 4, text: 'Très bonne formation. Les fonctions avancées pour l\'automatisation de calculs de structure sont particulièrement utiles. Formation sérieuse et complète.' },
+  { id: 'fxl-4', author: 'Marcel Degbey', country: 'Bénin', rating: 5, text: 'Passé de débutant à spécialiste Excel en 30 jours. Les projets pratiques intégrés sont directement réutilisables en bureau d\'études. Excellent investissement.' },
+];
+
+const reviewsKitISO = [
+  { id: 'iso-1', author: 'Hervé Zinsou', country: 'Bénin', rating: 5, text: 'Kit documentaire extrêmement bien organisé. Toutes les normes ISO dont j\'ai besoin pour mes projets sont accessibles instantanément. Un gain de temps inestimable.' },
+  { id: 'iso-2', author: 'Luc Agbodjan', country: 'Togo', rating: 5, text: 'Indispensable pour la mise en place d\'un SMQ. Les normes sont complètes avec annexes. Nous avons pu entamer notre démarche de certification ISO 9001 grâce à ce kit.' },
+  { id: 'iso-3', author: 'Diane Tchegnon', country: 'Bénin', rating: 4, text: 'Très utile pour avoir toutes les références normatives en un seul endroit. L\'accès immédiat après achat est un vrai plus. Je recommande à tous les ingénieurs qualité.' },
+];
+
+const reviewsCivil3D = [
+  { id: 'c3d-1', author: 'Maxime Ahounou', country: 'Bénin', rating: 5, text: 'Formation Civil 3D exceptionnelle ! Je suis passé de zéro à la modélisation de routes complètes en quelques semaines. Les projets d\'application sont très réalistes.' },
+  { id: 'c3d-2', author: 'Franck Vodounon', country: 'Bénin', rating: 5, text: 'La meilleure formation Civil 3D en français pour ingénieurs africains. Le formateur explique clairement des concepts souvent complexes. Fichiers sources inclus = parfait.' },
+  { id: 'c3d-3', author: 'Julien Koutchade', country: 'Cameroun', rating: 4, text: 'Formation bien structurée, de débutant à avancé. Les modules sur les profils en long et les cubatures sont particulièrement utiles pour nos chantiers.' },
+];
+
+// ─── Payment method icons (SVG paths used in ProductDetail) ─────────────────
+export const PAYMENT_METHODS = ['visa', 'mastercard', 'orange', 'mtn', 'wave', 'moov'];
+
+// ─── Products ────────────────────────────────────────────────────────────────
 export const products = [
   {
     id: 1,
-    slug: "pack-bureaux-etudes",
-    name: "PACK BUREAUX D'ÉTUDES: +60 FICHIERS EXCEL DE DIMENSIONNEMENT",
-    shortDesc:
-      "Plus de 60 fichiers Excel professionnels pour le dimensionnement béton armé, charpente, fondations.",
-    fullDesc: `Ce pack complet regroupe plus de 60 fichiers Excel méticuleusement développés par des ingénieurs civils expérimentés, couvrant l'ensemble des domaines du dimensionnement structurel. Chaque fichier est conforme aux normes Eurocode en vigueur et intègre des formules de calcul validées pour garantir des résultats fiables et précis. Que vous travailliez sur des structures en béton armé, des charpentes métalliques ou des fondations, ce pack vous offre des outils indispensables pour optimiser votre productivité.
-
-Les fichiers de dimensionnement béton armé comprennent le calcul des poutres, poteaux, dalles, voiles et fondations selon l'EC2. Les outils de charpente métallique couvrent les profils IPE, HEA, HEB, les assemblages boulonnés et soudés selon l'EC3. Les modèles de fondations traitent les semelles isolées, filantes et les radiers selon l'EC7 et les règles géotechniques locales.
-
-Chaque fichier est protégé mais entièrement modifiable dans les cellules de saisie, avec des interfaces claires et intuitives permettant une prise en main rapide même pour les ingénieurs débutants. Des notes d'utilisation et des références normatives sont intégrées directement dans les fichiers pour faciliter la vérification des calculs.
-
-Ce pack est régulièrement mis à jour pour intégrer les dernières évolutions normatives et les retours d'expérience de la communauté Civil+. En achetant ce pack, vous bénéficiez de toutes les mises à jour futures sans frais supplémentaires, ainsi que d'un accès à notre support technique dédié pour toute question d'utilisation.`,
-    price: 3500,
-    oldPrice: 7000,
-    currency: "FCFA",
-    rating: 4,
-    reviewCount: 189,
-    thumbnail: "https://placehold.co/600x400/1a1a2e/4CAF50?text=Pack+Bureaux+Etudes",
-    images: [
-      "https://placehold.co/600x400/1a1a2e/4CAF50?text=Pack+Bureaux+Etudes",
-      "https://placehold.co/600x400/16213e/4CAF50?text=Fichiers+Excel",
-      "https://placehold.co/600x400/0f3460/4CAF50?text=Dimensionnement",
+    slug: 'pack-bureaux-etudes',
+    name: "PACK BUREAUX D'ÉTUDES : +60 FICHIERS EXCEL DE DIMENSIONNEMENT",
+    shortDesc: "+60 fichiers Excel professionnels de dimensionnement béton armé 100% personnalisables, conformes aux normes Eurocodes, avec notes de calcul intégrées. Conçu pour ingénieurs, bureaux d'études et étudiants.",
+    features: [
+      'Dimensionnement poutres, poteaux, dalles et voiles BA',
+      'Calcul des semelles isolées, filantes et radiers',
+      'Descente de charges automatisée',
+      'Conforme Eurocodes (EC2, EC3, EC7)',
+      'Notes de calcul prêtes pour contrôle technique',
+      '100% personnalisable — formules déverrouillées',
     ],
-    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    category: "excel",
+    fullDesc: `+60 fichiers Excel de dimensionnement béton armé\n\nCe pack complet a été conçu par des ingénieurs structures expérimentés pour répondre aux besoins quotidiens des bureaux d'études et des professionnels du génie civil.\n\nContenu du pack :\n- Dimensionnement des poutres (flexion simple, bi-axiale, avec effort tranchant)\n- Calcul des poteaux (compression centrée et excentrée)\n- Vérification des dalles (unidirectionnelles et bidirectionnelles)\n- Calcul des semelles isolées, filantes et sur pieux\n- Dimensionnement des voiles et refends\n- Vérification des planchers (hourdis, prédalle, dalle pleine)\n- Descente de charges automatisée\n- Vérification à l'ELS et à l'ELU selon les Eurocodes\n\nCaractéristiques techniques :\nChaque fichier est entièrement paramétré selon les normes de calcul internationales (Eurocodes, BAEL). Les notes de calcul sont générées automatiquement et prêtes à soumettre aux organismes de contrôle technique.\n\nPour qui ?\nIngénieurs structures, bureaux d'études techniques, étudiants en génie civil, chefs de projet construction.`,
+    price: 3500,
+    oldPrice: 15000,
+    currency: 'FCFA',
+    sold: 148,
+    remaining: 17,
+    rating: 5,
+    reviewCount: 10,
+    thumbnail: '/images/pack-bureaux.jpg',
+    images: ['/images/pack-bureaux.jpg'],
+    videoUrl: 'https://www.youtube.com/embed/7zs_XXWxid0',
+    category: 'excel',
     countdown: true,
     externalLink: null,
+    reviews: reviewsPackBA,
   },
   {
     id: 2,
-    slug: "manager-toolkit",
-    name: "MANAGER TOOLKIT: APPLICATION DE SUIVI DE PROJET ET ÉTUDE DE PRIX",
-    shortDesc:
-      "Application complète pour la gestion, le suivi de projet et l'étude de prix en génie civil.",
-    fullDesc: `Manager Toolkit est une application web complète et intuitive conçue spécifiquement pour les ingénieurs et chefs de projet en génie civil. Elle centralise l'ensemble des outils nécessaires à la gestion efficace de vos projets de construction, depuis l'étude de prix initiale jusqu'au suivi d'avancement en temps réel sur le chantier.
-
-Le module d'étude de prix intègre une base de données de prix unitaires actualisée, permettant de générer des devis précis en quelques minutes. Vous pouvez personnaliser les ratios de main-d'œuvre, les prix des matériaux et les coefficients de marge selon vos réalités locales. Les métrés sont automatiquement calculés à partir de vos plans, réduisant considérablement le risque d'erreurs humaines.
-
-Le suivi de projet en temps réel vous permet de comparer l'avancement physique et financier de votre chantier avec le planning initial. Des tableaux de bord visuels vous donnent une vision instantanée de l'état de santé de votre projet, avec des alertes automatiques en cas de dépassement de délai ou de budget. Le module de reporting génère automatiquement les rapports d'avancement hebdomadaires et mensuels.
-
-Manager Toolkit est accessible depuis n'importe quel appareil (ordinateur, tablette, smartphone) et fonctionne en mode collaboratif, permettant à toute votre équipe de travailler simultanément sur les mêmes données. Un historique complet des modifications est conservé, assurant une traçabilité totale de toutes les décisions prises tout au long du projet.`,
+    slug: 'manager-toolkit',
+    name: 'MANAGER TOOLKIT : APPLICATION DE SUIVI DE PROJET ET ÉTUDE DE PRIX',
+    shortDesc: "Application web complète pour la gestion, le suivi de chantier et l'étude de prix en génie civil. Planning, budgets, alertes et rapports automatiques en temps réel.",
+    features: [
+      "Étude de prix : BPU, DQE et devis en quelques clics",
+      'Planning Gantt interactif avec gestion des ressources',
+      'Suivi des dépenses en temps réel avec alertes de dépassement',
+      'Rapports d\'avancement générés automatiquement',
+      'Suivi physique et financier simultané',
+      'Multi-projets — gérez plusieurs chantiers en parallèle',
+    ],
+    fullDesc: `Manager Toolkit — La référence du management de projet BTP\n\nManager Toolkit est une application web professionnelle développée spécifiquement pour les ingénieurs et chefs de projets BTP africains. Elle centralise toutes les fonctions de gestion en une seule plateforme intuitive.\n\nFonctionnalités principales :\n- Étude de prix : création de BPU, DQE et devis détaillés en quelques clics\n- Planning interactif : Gantt automatisé avec gestion des ressources et des dépendances\n- Suivi des dépenses : tableau de bord financier en temps réel avec alertes de dépassement\n- Rapports automatiques : rapports d'avancement, états financiers et PV de réunions\n- Suivi physique et financier : comparaison entre prévisionnel et réalisé\n- Multi-projets : gérez plusieurs chantiers simultanément\n\nEn cliquant sur le bouton ci-dessous, vous serez redirigé vers la plateforme Manager Toolkit pour découvrir tous les détails et souscrire à l'offre qui vous convient.`,
     price: 20000,
     oldPrice: 40000,
-    currency: "FCFA",
-    rating: 4,
+    currency: 'FCFA',
+    sold: 203,
+    remaining: 22,
+    rating: 5,
     reviewCount: 203,
-    thumbnail: "https://placehold.co/600x400/0d1b2a/4CAF50?text=Manager+Toolkit",
-    images: [
-      "https://placehold.co/600x400/0d1b2a/4CAF50?text=Manager+Toolkit",
-      "https://placehold.co/600x400/1b263b/4CAF50?text=Suivi+Projet",
-      "https://placehold.co/600x400/415a77/4CAF50?text=Etude+de+Prix",
-    ],
-    videoUrl: null,
-    category: "app",
+    thumbnail: '/images/manager-toolkit.jpg',
+    images: ['/images/manager-toolkit.jpg'],
+    videoUrl: 'https://www.youtube.com/embed/W2B4JngSD2c',
+    category: 'app',
     countdown: false,
-    externalLink: "https://www.managertoolkit.work",
+    externalLink: 'https://www.managertoolkit.work',
+    reviews: reviewsManagerToolkit,
   },
   {
     id: 3,
-    slug: "pack-controle-qualite",
-    name: "PACK CONTRÔLE QUALITÉ: +30 MODÈLES DE FICHES DE CONTRÔLE PRÊT À L'EMPLOI",
-    shortDesc:
-      "30+ modèles de fiches de contrôle qualité prêts à l'emploi pour vos chantiers.",
-    fullDesc: `Ce pack de contrôle qualité regroupe plus de 30 modèles de fiches de contrôle soigneusement élaborés pour couvrir toutes les phases d'un chantier de génie civil. Ces fiches sont conformes aux exigences des systèmes de management de la qualité ISO 9001 et aux réglementations techniques en vigueur dans la construction, vous permettant de garantir la qualité de vos ouvrages de manière systématique et documentée.
-
-Les fiches couvrent l'ensemble du cycle de vie du projet : réception des matériaux sur chantier, contrôle des coffrages avant bétonnage, surveillance du bétonnage et de la cure, contrôle des armatures, réception des travaux de terrassement, contrôle des étanchéités, et bien d'autres processus critiques. Chaque fiche intègre les critères d'acceptation selon les normes applicables et des zones de commentaires pour documenter les non-conformités.
-
-L'utilisation systématique de ces fiches vous permet de constituer un dossier de contrôle complet pour chaque projet, indispensable en cas de litige ou d'audit. Les fiches sont au format Excel, facilement adaptables à vos besoins spécifiques, et peuvent être remplies directement sur tablette sur le chantier ou imprimées pour une utilisation papier.
-
-En plus des fiches elles-mêmes, ce pack comprend un guide d'utilisation détaillé expliquant comment mettre en place un système de contrôle qualité efficace sur vos chantiers, des procédures de traitement des non-conformités, et des modèles de rapports de fin de contrôle à destination de votre maître d'ouvrage.`,
+    slug: 'pack-controle-qualite',
+    name: "PACK CONTRÔLE QUALITÉ : +30 MODÈLES DE FICHES DE CONTRÔLE PRÊTS À L'EMPLOI",
+    shortDesc: "+30 fiches de contrôle qualité prêtes à l'emploi pour tous types de chantiers : béton, terrassement, réseaux, charpente. Conformes aux exigences ISO 9001 et NF.",
+    features: [
+      'Fiches de contrôle exécution béton (coffrage, ferraillage, coulage)',
+      'Réception des matériaux (acier, ciment, granulats)',
+      'Contrôle des terrassements et réseaux enterrés',
+      'Fiches de non-conformité et actions correctives',
+      'Procès-verbaux de réception partielle et finale',
+      'Compatible ISO 9001, NF EN 13670',
+    ],
+    fullDesc: `+30 modèles de fiches de contrôle qualité pour vos chantiers\n\nCe pack documentaire vous donne accès à une bibliothèque complète de fiches de contrôle qualité, directement utilisables sur vos chantiers de construction.\n\nContenu du pack :\n- Fiches de contrôle exécution béton (coffrage, ferraillage, coulage, décoffrage)\n- Points d'arrêt et points critiques pour structures béton armé\n- Fiches de réception des matériaux (acier, ciment, granulats, bois)\n- Contrôle des terrassements (compactage, portance, nivellement)\n- Vérification des réseaux enterrés (assainissement, adduction d'eau)\n- Contrôles de charpente bois et métallique\n- Fiches de non-conformité et actions correctives\n- Procès-verbaux de réception partielle et finale\n\nCaractéristiques :\nTous les documents sont au format Word et Excel, entièrement modifiables. Compatibilité normative : ISO 9001, NF EN 13670 et normes de contrôle technique locales.`,
     price: 3500,
     oldPrice: 7000,
-    currency: "FCFA",
+    currency: 'FCFA',
+    sold: 97,
+    remaining: 30,
     rating: 4,
     reviewCount: 97,
-    thumbnail: "https://placehold.co/600x400/1a1a2e/4CAF50?text=Pack+Qualite",
-    images: [
-      "https://placehold.co/600x400/1a1a2e/4CAF50?text=Pack+Qualite",
-      "https://placehold.co/600x400/16213e/4CAF50?text=Fiches+Controle",
-      "https://placehold.co/600x400/0f3460/4CAF50?text=ISO+9001",
-    ],
+    thumbnail: '/images/pack-qualite.jpg',
+    images: ['/images/pack-qualite.jpg'],
     videoUrl: null,
-    category: "excel",
+    category: 'excel',
     countdown: false,
     externalLink: null,
+    reviews: reviewsQualite,
   },
   {
     id: 4,
-    slug: "template-gantt",
-    name: "TEMPLATE EXCEL DE PLANIFICATION GANTT",
-    shortDesc:
-      "Planifiez vos projets avec notre template Gantt Excel professionnel et personnalisable.",
-    fullDesc: `Notre template Excel de planification Gantt est un outil de gestion de projet complet et professionnel, conçu spécifiquement pour les projets de génie civil. Il permet de créer rapidement des plannings visuels clairs et précis, intégrant toutes les tâches de votre projet avec leurs dépendances, ressources et jalons clés.
-
-Le diagramme de Gantt se génère automatiquement à partir de la saisie des tâches, avec un codage couleur intelligent permettant de distinguer les différentes phases du projet (travaux préparatoires, gros œuvre, second œuvre, finitions). Les dépendances entre tâches sont gérées automatiquement, et le chemin critique est mis en évidence pour vous aider à identifier les tâches qui impactent directement la date de fin du projet.
-
-Le template intègre également un suivi de l'avancement en temps réel, permettant de comparer le planning prévisionnel avec le réalisé. Des indicateurs de performance (SPI, CPI) sont calculés automatiquement pour vous donner une vision rapide de l'état de santé du planning. Des alertes visuelles signalent les tâches en retard ou à risque, vous permettant de prendre des mesures correctives rapidement.
-
-Compatible avec toutes les versions d'Excel à partir de 2016, ce template ne nécessite aucune macro et fonctionne sur Windows et Mac. Il peut gérer des projets jusqu'à 500 tâches sur une durée maximale de 3 ans, ce qui le rend adapté à la grande majorité des projets de génie civil. Une notice d'utilisation complète est incluse pour une prise en main immédiate.`,
+    slug: 'template-gantt',
+    name: 'TEMPLATE EXCEL DE PLANIFICATION GANTT',
+    shortDesc: 'Template Excel professionnel de planification Gantt entièrement automatisé. Gestion des tâches, ressources, dépendances et avancement. Prêt à l\'emploi.',
+    features: [
+      'Gantt automatique avec mise en forme conditionnelle dynamique',
+      'Gestion des dépendances entre tâches (Fin-Début, Début-Début)',
+      'Calcul automatique des délais et chemin critique',
+      'Courbes S : prévisionnel vs. réel',
+      'Gestion des ressources par intervenant',
+      'Alertes automatiques pour tâches en retard',
+    ],
+    fullDesc: `Template Gantt Excel professionnel — Planifiez vos projets comme un expert\n\nCe template Excel de planification Gantt a été développé pour les chefs de projets BTP qui veulent une solution professionnelle sans logiciels coûteux comme MS Project.\n\nFonctionnalités du template :\n- Planning Gantt automatique avec mise en forme conditionnelle dynamique\n- Gestion des dépendances entre tâches (Fin-Début, Début-Début)\n- Calcul automatique des délais et identification du chemin critique\n- Suivi de l'avancement : % réalisé avec courbes S prévisionnel vs. réel\n- Gestion des ressources : affectation et suivi de charge par intervenant\n- Alertes automatiques : tâches en retard signalées en rouge\n- Vue mensuelle et hebdomadaire commutable\n\nFichier Excel (.xlsx) entièrement déverrouillé et personnalisable. Inclus : guide d'utilisation détaillé avec cas pratique appliqué à un projet de bâtiment R+2.`,
     price: 2000,
     oldPrice: 4000,
-    currency: "FCFA",
-    rating: 3,
+    currency: 'FCFA',
+    sold: 74,
+    remaining: 50,
+    rating: 4,
     reviewCount: 74,
-    thumbnail: "https://placehold.co/600x400/2d6a4f/ffffff?text=Template+Gantt",
-    images: [
-      "https://placehold.co/600x400/2d6a4f/ffffff?text=Template+Gantt",
-      "https://placehold.co/600x400/1b4332/ffffff?text=Planning+Gantt",
-      "https://placehold.co/600x400/40916c/ffffff?text=Chemin+Critique",
-    ],
+    thumbnail: '/images/template-gantt.jpg',
+    images: ['/images/template-gantt.jpg'],
     videoUrl: null,
-    category: "excel",
+    category: 'excel',
     countdown: false,
     externalLink: null,
+    reviews: reviewsGantt,
   },
   {
     id: 5,
-    slug: "copilote-gestion-financiere",
-    name: "COPILOTE DE GESTION FINANCIÈRE",
-    shortDesc:
-      "Gérez vos finances de projet avec notre outil Excel de gestion financière intelligent.",
-    fullDesc: `Le Copilote de Gestion Financière est un outil Excel avancé conçu pour aider les ingénieurs civils et les chefs de projet à maîtriser parfaitement la dimension financière de leurs projets de construction. Il centralise toutes les informations financières du projet dans un tableau de bord unique, clair et actionnable, vous donnant à tout moment une vision précise de votre situation financière.
-
-Le module de suivi budgétaire vous permet de comparer en temps réel le budget initial avec les dépenses engagées et réalisées. Toutes les écritures comptables sont catégorisées automatiquement selon le poste de coût correspondant (main-d'œuvre, matériaux, sous-traitance, matériel, frais généraux), et des graphiques d'évolution vous permettent de visualiser facilement les tendances de consommation du budget.
-
-La gestion des situations de travaux et des paiements est entièrement intégrée, avec la génération automatique des situations mensuelles à soumettre au maître d'ouvrage. Le suivi des retenues de garantie, des avances sur travaux et des révisions de prix est automatisé, éliminant les risques d'oubli ou d'erreur de calcul. Un module de prévision de trésorerie vous aide à anticiper vos besoins en financement sur les prochains mois.
-
-Ce copilote financier a été conçu pour être utilisable sans formation comptable préalable, avec des interfaces intuitives et des formules transparentes. Il convient aussi bien aux petites entreprises de construction qu'aux grands bureaux d'études gérant plusieurs projets simultanément, grâce à son module de consolidation multi-projets.`,
+    slug: 'copilote-gestion-financiere',
+    name: 'COPILOTE DE GESTION FINANCIÈRE',
+    shortDesc: 'Tableau de bord Excel intelligent pour le suivi financier de vos projets de construction. Budgets, décaissements, écarts et prévisions — tout en un seul fichier.',
+    features: [
+      'Budget prévisionnel détaillé par lot de travaux',
+      'Suivi des décaissements en temps réel',
+      'Tableau de bord avec graphiques automatiques',
+      'Analyse des écarts budget initial vs. réel',
+      'Prévisions de fin de projet intelligentes',
+      'Planning de trésorerie mensuel avec seuils d\'alerte',
+    ],
+    fullDesc: `Copilote de Gestion Financière — Maîtrisez vos budgets de projet\n\nLe Copilote de Gestion Financière est un outil Excel avancé conçu pour les chefs de projets et directeurs financiers du secteur BTP.\n\nCe que le Copilote fait pour vous :\n- Budget prévisionnel : décomposition détaillée par lot de travaux\n- Suivi des décaissements : enregistrement chronologique de toutes les dépenses\n- Tableau de bord automatique : graphiques de synthèse mis à jour en temps réel\n- Analyse des écarts : comparaison budget initial vs. dépenses réelles\n- Prévisions de fin de projet : extrapolation intelligente du budget restant\n- Gestion de la trésorerie : planning de trésorerie mensuel avec seuils d'alerte\n- Suivi des situations de travaux et des règlements entreprises\n\nIdéal pour :\nMaîtres d'ouvrage, chefs de projets BTP, bureaux de maîtrise d'œuvre, PME du BTP.`,
     price: 1500,
     oldPrice: 3000,
-    currency: "FCFA",
+    currency: 'FCFA',
+    sold: 51,
+    remaining: 40,
     rating: 4,
     reviewCount: 51,
-    thumbnail: "https://placehold.co/600x400/1e3a5f/4CAF50?text=Copilote+Finance",
-    images: [
-      "https://placehold.co/600x400/1e3a5f/4CAF50?text=Copilote+Finance",
-      "https://placehold.co/600x400/2c5f8a/4CAF50?text=Gestion+Budget",
-      "https://placehold.co/600x400/1a3d6e/4CAF50?text=Tresorerie",
-    ],
+    thumbnail: '/images/copilote-finance.jpg',
+    images: ['/images/copilote-finance.jpg'],
     videoUrl: null,
-    category: "excel",
+    category: 'excel',
     countdown: false,
     externalLink: null,
+    reviews: reviewsFinance,
   },
   {
     id: 6,
-    slug: "formation-excel-specialiste",
-    name: "FORMATION EXCEL NIVEAU SPÉCIALISTE",
-    shortDesc:
-      "Maîtrisez Excel à un niveau expert pour vos projets de génie civil.",
-    fullDesc: `Cette formation Excel niveau spécialiste a été spécialement conçue pour les ingénieurs civils qui souhaitent exploiter tout le potentiel de Microsoft Excel dans leurs activités professionnelles. En partant des bases fondamentales jusqu'aux fonctionnalités les plus avancées, vous deviendrez capable de développer vos propres outils de calcul, d'automatiser vos tâches répétitives et de créer des rapports professionnels impressionnants.
-
-Le programme de formation couvre les fonctions avancées d'Excel (INDEX/MATCH, OFFSET, fonctions matricielles, fonctions statistiques), la création de tableaux croisés dynamiques et de graphiques professionnels, l'utilisation des outils d'analyse de données (Solver, Analyse de scénarios, Tables de données), et les bases de la programmation VBA pour l'automatisation des tâches. Des exercices pratiques basés sur des cas réels de génie civil vous permettent de mettre immédiatement en pratique les concepts appris.
-
-La formation est dispensée en format vidéo avec accès illimité, permettant de progresser à votre rythme et de revisionner les modules autant de fois que nécessaire. Chaque module est accompagné de fichiers Excel d'exercices et de solutions commentées. Un forum privé vous permet d'échanger avec les autres participants et de poser vos questions directement au formateur, ingénieur civil avec 15 ans d'expérience en bureau d'études.
-
-À l'issue de la formation, vous recevrez un certificat de completion Civil+ attestant de vos nouvelles compétences. Ce certificat est reconnu par les entreprises partenaires de Civil+ et peut valoriser significativement votre profil professionnel. La formation est mise à jour régulièrement pour intégrer les nouvelles fonctionnalités d'Excel et les meilleures pratiques du secteur.`,
+    slug: 'formation-excel-specialiste',
+    name: 'FORMATION EXCEL NIVEAU SPÉCIALISTE',
+    shortDesc: 'Formation Excel complète de débutant à expert, orientée génie civil. Fonctions avancées, VBA, macros, automatisation de calculs de structure. Accès à vie.',
+    features: [
+      'Fonctions avancées : INDEX/EQUIV, LAMBDA, matricielles',
+      'Tableaux croisés dynamiques pour données de chantier',
+      'VBA & macros pour l\'automatisation des calculs',
+      'Interfaces utilisateur professionnelles (UserForms)',
+      'Projets complets d\'outils de génie civil de A à Z',
+      'Accès à vie + communauté Discord Civil+',
+    ],
+    fullDesc: `Formation Excel Niveau Spécialiste — Devenez expert Excel appliqué au génie civil\n\nCette formation intensive transforme des ingénieurs et techniciens en véritables experts Excel capables de développer leurs propres outils de calcul et d'automatisation.\n\nProgramme :\n- Module 1 : Fonctions avancées (INDEX/EQUIV, DECALER, LAMBDA, matricielles)\n- Module 2 : Mise en forme conditionnelle avancée et tableaux de bord dynamiques\n- Module 3 : Tableaux croisés dynamiques pour données de chantier\n- Module 4 : Introduction à VBA — automatisation des tâches répétitives\n- Module 5 : Développement de macros pour le calcul de structures\n- Module 6 : Interfaces utilisateur professionnelles (UserForms)\n- Module 7 : Projets complets — développement d'outils de génie civil de A à Z\n\nFormat : 100% en ligne, à votre rythme. Inclus : vidéos HD, exercices corrigés, fichiers sources et accès à la communauté Discord Civil+. Certificat de completion délivré en fin de formation.`,
     price: 4999,
     oldPrice: 9999,
-    currency: "FCFA",
-    rating: 4,
+    currency: 'FCFA',
+    sold: 188,
+    remaining: 15,
+    rating: 5,
     reviewCount: 188,
-    thumbnail: "https://placehold.co/600x400/4a0080/ffffff?text=Formation+Excel",
-    images: [
-      "https://placehold.co/600x400/4a0080/ffffff?text=Formation+Excel",
-      "https://placehold.co/600x400/6a0dad/ffffff?text=Niveau+Specialiste",
-      "https://placehold.co/600x400/8b00ff/ffffff?text=Certification",
-    ],
-    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    category: "formation",
+    thumbnail: '/images/formation-excel.jpg',
+    images: ['/images/formation-excel.jpg'],
+    videoUrl: null,
+    category: 'formation',
     countdown: false,
     externalLink: null,
+    reviews: reviewsFormationExcel,
   },
-];
-
-export const reviews = [
   {
-    id: 1,
-    author: "Kouamé Adjobi",
-    country: "Côte d'Ivoire",
+    id: 7,
+    slug: 'kit-normes-iso',
+    name: 'KIT NORMES ISO : DOCUMENTAIRE COMPLET DES NORMES DE RÉFÉRENCE',
+    shortDesc: 'Kit documentaire complet regroupant les normes ISO essentielles pour les projets de génie civil et management de la qualité. Accès immédiat, utilisation à vie.',
+    features: [
+      'ISO 9001 — Management de la qualité (version actuelle + annexes)',
+      'ISO 14001 — Management environnemental',
+      'ISO 45001 — Santé et sécurité au travail',
+      'ISO 19011 — Audit de systèmes de management',
+      'ISO 17025 — Laboratoires d\'essais et d\'étalonnages',
+      'PDF haute qualité, recherchable, imprimable — accès à vie',
+    ],
+    fullDesc: `Kit Normes ISO — Accès immédiat à toutes vos normes de référence\n\nCe kit documentaire regroupe en un seul accès toutes les normes ISO indispensables pour les ingénieurs civils, les responsables qualité et les auditeurs.\n\nNormes incluses :\n- ISO 9001 : Systèmes de management de la qualité (version actuelle + annexes)\n- ISO 14001 : Systèmes de management environnemental\n- ISO 45001 : Santé et sécurité au travail (ex-OHSAS 18001)\n- ISO 19011 : Lignes directrices pour l'audit de systèmes de management\n- ISO 17025 : Exigences générales pour laboratoires d'essais et d'étalonnages\n\nCaractéristiques :\n- Version française officielle complète avec annexes informatifs\n- Format PDF haute qualité, recherchable et imprimable\n- Accès à vie : téléchargez une fois, accédez à tout moment\n- Mises à jour incluses : vous recevez automatiquement les révisions normatives`,
+    price: 2500,
+    oldPrice: 5000,
+    currency: 'FCFA',
+    sold: 63,
+    remaining: 35,
     rating: 5,
-    text: "Excellents fichiers Excel, très professionnels et conformes aux normes Eurocode. J'ai gagné un temps précieux sur mes calculs de dimensionnement. Je recommande vivement à tous les ingénieurs civils.",
+    reviewCount: 63,
+    thumbnail: '/images/kit-normes-iso.jpg',
+    images: ['/images/kit-normes-iso.jpg'],
+    videoUrl: null,
+    category: 'documents',
+    countdown: false,
+    externalLink: null,
+    reviews: reviewsKitISO,
   },
   {
-    id: 2,
-    author: "Mamadou Diallo",
-    country: "Sénégal",
-    rating: 4,
-    text: "Le Manager Toolkit a complètement transformé la gestion de mes chantiers. L'interface est intuitive et le suivi financier est particulièrement bien conçu. Un outil indispensable pour tout chef de projet.",
-  },
-  {
-    id: 3,
-    author: "Fatimata Ouédraogo",
-    country: "Burkina Faso",
+    id: 8,
+    slug: 'formation-civil-3d-2025',
+    name: 'FORMATION CIVIL 3D 2025 : MAÎTRISEZ AUTOCAD CIVIL 3D DE A À Z',
+    shortDesc: 'Formation 100% pratique AutoCAD Civil 3D 2025 : routes, terrassements, réseaux, MNT et profils en long. De débutant à niveau avancé avec fichiers sources inclus.',
+    features: [
+      'Création et gestion des MNT (Modèles Numériques de Terrain)',
+      'Alignements en plan et profils en long de routes',
+      'Profils en travers : gabarits, assemblages et corridors',
+      'Calcul automatique des cubatures (terrassements)',
+      'Conception des réseaux enterrés (assainissement, AEP)',
+      'Production des plans d\'exécution normalisés',
+    ],
+    fullDesc: `Formation Civil 3D 2025 — La formation la plus complète pour ingénieurs VRD\n\nMaîtrisez AutoCAD Civil 3D 2025, le logiciel de référence pour la conception et le calcul des infrastructures routières, des terrassements et des réseaux.\n\nProgramme détaillé :\n- Module 1 : Interface et configuration optimale de Civil 3D pour VRD\n- Module 2 : Création et gestion des MNT (Modèles Numériques de Terrain)\n- Module 3 : Alignements en plan — tracé de routes et voiries\n- Module 4 : Profils en long — création et optimisation du profil projet\n- Module 5 : Profils en travers — gabarits, assemblages et corridors\n- Module 6 : Calcul automatique des cubatures (terrassements)\n- Module 7 : Conception et calcul des réseaux enterrés\n- Module 8 : Rendu et production des plans d'exécution normalisés\n- Module 9 : Projet complet — Route de 5 km de A à Z\n\nInclus : vidéos HD téléchargeables, fichiers sources de tous exercices, projets complets d'application, assistance technique et accès à la communauté Civil+.`,
+    price: 9999,
+    oldPrice: 19999,
+    currency: 'FCFA',
+    sold: 42,
+    remaining: 20,
     rating: 5,
-    text: "La formation Excel spécialiste est vraiment complète. Les exercices pratiques sur des cas réels de génie civil m'ont permis de progresser rapidement. Le formateur est très réactif et pédagogue.",
-  },
-  {
-    id: 4,
-    author: "Ibrahim Touré",
-    country: "Mali",
-    rating: 4,
-    text: "Les fiches de contrôle qualité sont très bien structurées et couvrent tous les aspects importants d'un chantier. Elles m'ont aidé à mettre en place un système qualité efficace sur mes projets.",
-  },
-  {
-    id: 5,
-    author: "Awa Ndiaye",
-    country: "Sénégal",
-    rating: 5,
-    text: "Civil+ est une référence pour les outils de génie civil en Afrique de l'Ouest. Les produits sont de haute qualité, le support est réactif et les prix sont très accessibles. Bravo à toute l'équipe !",
+    reviewCount: 42,
+    thumbnail: '/images/formation-civil-3d.jpg',
+    images: ['/images/formation-civil-3d.jpg'],
+    videoUrl: null,
+    category: 'formation',
+    countdown: false,
+    externalLink: null,
+    reviews: reviewsCivil3D,
   },
 ];
 
 export const categories = [
-  { id: "all", name: "Tous les produits" },
-  { id: "excel", name: "Fichiers Excel" },
-  { id: "app", name: "Applications" },
-  { id: "formation", name: "Formations" },
+  { id: 'all', name: 'Tous' },
+  { id: 'excel', name: 'Excel' },
+  { id: 'app', name: 'Application' },
+  { id: 'formation', name: 'Formation' },
+  { id: 'documents', name: 'Documents' },
 ];

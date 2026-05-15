@@ -1,7 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingCart, ExternalLink, ChevronLeft, ChevronRight, Eye, ArrowLeft } from 'lucide-react';
+import {
+  ShoppingCart, ExternalLink, ChevronLeft, ChevronRight,
+  ArrowLeft, CheckCircle2, Download, Shield, Clock, Users,
+} from 'lucide-react';
 import StarRating from '../components/StarRating';
 import CountdownTimer from '../components/CountdownTimer';
 import ReviewsCarousel from '../components/ReviewsCarousel';
@@ -9,6 +12,103 @@ import { products } from '../data/products';
 import { useCurrency } from '../hooks/useCurrency';
 import { trackProductView, trackInitiateCheckout } from '../utils/analytics';
 
+// ─── Payment method SVGs ─────────────────────────────────────────────────────
+function PaymentIcons() {
+  return (
+    <div className="flex flex-wrap items-center gap-2 mt-3">
+      {/* Visa */}
+      <div className="border border-gray-200 rounded px-2 py-1 bg-white h-8 flex items-center" title="Visa">
+        <svg viewBox="0 0 48 16" className="h-4 w-auto" aria-label="Visa">
+          <text x="0" y="13" fontFamily="Arial" fontWeight="bold" fontSize="14" fill="#1A1F71">VISA</text>
+        </svg>
+      </div>
+      {/* Mastercard */}
+      <div className="border border-gray-200 rounded px-1.5 py-1 bg-white h-8 flex items-center" title="Mastercard">
+        <svg viewBox="0 0 38 24" className="h-5 w-auto">
+          <circle cx="15" cy="12" r="10" fill="#EB001B" />
+          <circle cx="23" cy="12" r="10" fill="#F79E1B" fillOpacity="0.85" />
+        </svg>
+      </div>
+      {/* Orange Money */}
+      <div className="border border-gray-200 rounded px-2 py-1 bg-white h-8 flex items-center" title="Orange Money">
+        <svg viewBox="0 0 60 20" className="h-4 w-auto">
+          <circle cx="10" cy="10" r="9" fill="#FF6600" />
+          <text x="24" y="14" fontFamily="Arial" fontWeight="bold" fontSize="9" fill="#FF6600">Money</text>
+        </svg>
+      </div>
+      {/* MTN Mobile Money */}
+      <div className="border border-gray-200 rounded px-2 py-1 bg-white h-8 flex items-center" title="MTN MoMo">
+        <svg viewBox="0 0 48 20" className="h-4 w-auto">
+          <rect width="48" height="20" rx="3" fill="#FFCC00" />
+          <text x="6" y="14" fontFamily="Arial" fontWeight="bold" fontSize="9" fill="#000">MTN MoMo</text>
+        </svg>
+      </div>
+      {/* Wave */}
+      <div className="border border-gray-200 rounded px-2 py-1 bg-white h-8 flex items-center" title="Wave">
+        <svg viewBox="0 0 48 20" className="h-4 w-auto">
+          <rect width="48" height="20" rx="3" fill="#1DC1EB" />
+          <text x="8" y="14" fontFamily="Arial" fontWeight="bold" fontSize="11" fill="#fff">Wave</text>
+        </svg>
+      </div>
+      {/* Moov Money */}
+      <div className="border border-gray-200 rounded px-2 py-1 bg-white h-8 flex items-center" title="Moov Money">
+        <svg viewBox="0 0 52 20" className="h-4 w-auto">
+          <rect width="52" height="20" rx="3" fill="#0055A5" />
+          <text x="4" y="14" fontFamily="Arial" fontWeight="bold" fontSize="9" fill="#fff">Moov Money</text>
+        </svg>
+      </div>
+    </div>
+  );
+}
+
+// ─── Formatted description ───────────────────────────────────────────────────
+function FormattedDescription({ text, features }) {
+  const lines = text.split('\n');
+  return (
+    <div className="space-y-4 text-gray-700 text-[15px] leading-relaxed">
+      {/* Feature checklist */}
+      {features && features.length > 0 && (
+        <div className="bg-gray-50 rounded-card p-5 border border-gray-100">
+          <p className="font-bold text-primary mb-3 flex items-center gap-2">
+            <CheckCircle2 size={17} className="text-green-600" />
+            Ce que vous obtenez
+          </p>
+          <ul className="space-y-2">
+            {features.map((f, i) => (
+              <li key={i} className="flex items-start gap-2.5 text-sm">
+                <CheckCircle2 size={15} className="text-green-500 mt-0.5 flex-shrink-0" />
+                <span>{f}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {/* Paragraphs */}
+      {lines.map((line, i) => {
+        if (!line.trim()) return null;
+        // Bold headings (lines ending with :)
+        if (line.startsWith('**') || (line.endsWith(':') && line.length < 60)) {
+          return (
+            <h3 key={i} className="font-bold text-primary text-base mt-5 first:mt-0">
+              {line.replace(/\*\*/g, '')}
+            </h3>
+          );
+        }
+        if (line.startsWith('- ')) {
+          return (
+            <li key={i} className="flex items-start gap-2 text-sm ml-2">
+              <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-gray-400 flex-shrink-0" />
+              <span>{line.slice(2)}</span>
+            </li>
+          );
+        }
+        return <p key={i}>{line}</p>;
+      })}
+    </div>
+  );
+}
+
+// ─── Main component ──────────────────────────────────────────────────────────
 export default function ProductDetail() {
   const { slug } = useParams();
   const navigate = useNavigate();
@@ -16,7 +116,7 @@ export default function ProductDetail() {
   const [selectedImage, setSelectedImage] = useState(0);
   const [showSticky, setShowSticky] = useState(false);
   const { convertPrice } = useCurrency();
-  const mainRef = useRef(null);
+  const buyZoneRef = useRef(null);
 
   useEffect(() => {
     if (product) {
@@ -25,10 +125,11 @@ export default function ProductDetail() {
     }
   }, [product]);
 
+  // Show sticky bar once buy zone scrolls out of view
   useEffect(() => {
     const handleScroll = () => {
-      if (mainRef.current) {
-        const rect = mainRef.current.getBoundingClientRect();
+      if (buyZoneRef.current) {
+        const rect = buyZoneRef.current.getBoundingClientRect();
         setShowSticky(rect.bottom < 0);
       }
     };
@@ -42,10 +143,7 @@ export default function ProductDetail() {
         <div>
           <h1 className="text-3xl font-bold text-primary mb-4">Produit introuvable</h1>
           <p className="text-gray-500 mb-6">Ce produit n'existe pas ou a été retiré.</p>
-          <Link
-            to="/"
-            className="bg-accent text-white px-6 py-3 rounded-btn font-semibold hover:bg-accent-dark transition"
-          >
+          <Link to="/" className="bg-primary text-white px-6 py-3 rounded-btn font-semibold hover:bg-gray-800 transition">
             Retour à l'accueil
           </Link>
         </div>
@@ -62,7 +160,6 @@ export default function ProductDetail() {
     if (product.externalLink) {
       window.open(product.externalLink, '_blank', 'noopener,noreferrer');
     } else {
-      // In a real app, redirect to payment page
       alert(`Redirection vers le paiement pour : ${product.name}`);
     }
   };
@@ -71,9 +168,9 @@ export default function ProductDetail() {
   const nextImage = () => setSelectedImage((i) => Math.min(product.images.length - 1, i + 1));
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Reviews Carousel */}
-      <ReviewsCarousel />
+    <div className="min-h-screen bg-white pb-24 md:pb-0">
+      {/* Reviews auto-scroll carousel */}
+      <ReviewsCarousel reviews={product.reviews} />
 
       {/* Breadcrumb */}
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-4">
@@ -87,16 +184,17 @@ export default function ProductDetail() {
       </div>
 
       {/* Main product section */}
-      <div ref={mainRef} className="max-w-7xl mx-auto px-4 md:px-6 pb-12">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 pb-10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          {/* Left: Images */}
+
+          {/* ── Left: Image gallery ── */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
           >
             {/* Main image */}
-            <div className="relative rounded-card overflow-hidden bg-gray-100 mb-3 aspect-video">
+            <div className="relative rounded-card overflow-hidden bg-gray-100 mb-3 aspect-square md:aspect-video">
               <AnimatePresence mode="wait">
                 <motion.img
                   key={selectedImage}
@@ -106,62 +204,75 @@ export default function ProductDetail() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: 0.25 }}
+                  transition={{ duration: 0.2 }}
+                  onError={(e) => { e.currentTarget.style.display = 'none'; }}
                 />
               </AnimatePresence>
               {product.images.length > 1 && (
                 <>
-                  <button
-                    onClick={prevImage}
-                    disabled={selectedImage === 0}
-                    className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-1.5 shadow disabled:opacity-30 transition"
-                  >
+                  <button onClick={prevImage} disabled={selectedImage === 0}
+                    className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-1.5 shadow disabled:opacity-30 transition">
                     <ChevronLeft size={18} />
                   </button>
-                  <button
-                    onClick={nextImage}
-                    disabled={selectedImage === product.images.length - 1}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-1.5 shadow disabled:opacity-30 transition"
-                  >
+                  <button onClick={nextImage} disabled={selectedImage === product.images.length - 1}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-1.5 shadow disabled:opacity-30 transition">
                     <ChevronRight size={18} />
                   </button>
                 </>
               )}
             </div>
 
-            {/* Thumbnails */}
+            {/* Sub-thumbnails */}
             {product.images.length > 1 && (
-              <div className="flex gap-2 overflow-x-auto pb-1">
+              <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-thin">
                 {product.images.map((img, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setSelectedImage(i)}
+                  <button key={i} onClick={() => setSelectedImage(i)}
                     className={`flex-shrink-0 w-20 h-14 rounded overflow-hidden border-2 transition ${
-                      selectedImage === i ? 'border-accent' : 'border-gray-200 hover:border-gray-400'
-                    }`}
-                  >
-                    <img src={img} alt={`Vue ${i + 1}`} className="w-full h-full object-cover" />
+                      selectedImage === i ? 'border-primary' : 'border-gray-200 hover:border-gray-400'
+                    }`}>
+                    <img src={img} alt={`Vue ${i + 1}`} className="w-full h-full object-cover"
+                      onError={(e) => { e.currentTarget.style.display = 'none'; }} />
                   </button>
                 ))}
               </div>
             )}
+
+            {/* Trust badges */}
+            <div className="mt-4 grid grid-cols-3 gap-3">
+              {[
+                { icon: Shield, label: 'Achat sécurisé' },
+                { icon: Download, label: 'Accès immédiat' },
+                { icon: Clock, label: 'Accès à vie' },
+              ].map(({ icon: Icon, label }) => (
+                <div key={label} className="flex flex-col items-center gap-1 text-center border border-gray-100 rounded-card p-3">
+                  <Icon size={20} className="text-gray-500" />
+                  <span className="text-xs text-gray-500">{label}</span>
+                </div>
+              ))}
+            </div>
           </motion.div>
 
-          {/* Right: Info */}
+          {/* ── Right: Info & buy zone ── */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
             className="flex flex-col gap-4"
             id="acheter"
+            ref={buyZoneRef}
           >
-            {/* Category + discount */}
-            <div className="flex items-center gap-2">
-              <span className="bg-primary text-white text-xs px-3 py-1 rounded-full capitalize font-medium">
-                {product.category}
+            {/* Stats row */}
+            <div className="flex items-center gap-4 text-sm text-gray-500">
+              <span className="flex items-center gap-1">
+                <Users size={14} />
+                <strong className="text-primary">{product.reviewCount}</strong> avis
               </span>
-              <span className="bg-accent text-white text-xs px-3 py-1 rounded-full font-bold">
-                -{discountPct}%
+              <span className="flex items-center gap-1">
+                <Download size={14} />
+                <strong className="text-primary">{product.sold}+</strong> achats
+              </span>
+              <span className="px-2 py-0.5 bg-gray-100 rounded-full text-xs capitalize">
+                {product.category === 'app' ? 'Application' : product.category === 'excel' ? 'Fichier' : product.category}
               </span>
             </div>
 
@@ -170,57 +281,63 @@ export default function ProductDetail() {
               {product.name}
             </h1>
 
-            {/* Stars + review count */}
+            {/* Stars */}
             <div className="flex items-center gap-3">
               <StarRating rating={product.rating} size={18} />
-              <span className="text-sm text-gray-500">{product.reviewCount} avis</span>
+              <span className="text-sm text-gray-500">{product.reviewCount} avis vérifiés</span>
             </div>
 
             {/* Price */}
             <div className="flex items-baseline gap-3">
-              <span className="text-gray-400 line-through text-base">{displayOldPrice}</span>
-              <span className="text-accent font-extrabold text-3xl">{displayPrice}</span>
+              <span className="text-gray-400 line-through text-base">
+                {displayOldPrice}
+              </span>
+              <span className="text-primary font-extrabold text-4xl">{displayPrice}</span>
+              <span className="bg-red-100 text-red-600 text-sm font-bold px-2 py-0.5 rounded-full">
+                -{discountPct}%
+              </span>
             </div>
 
             {/* Countdown */}
             {product.countdown && (
-              <div className="bg-gray-50 border border-gray-200 rounded-card p-4">
-                <CountdownTimer />
-              </div>
+              <CountdownTimer
+                sold={product.sold}
+                remaining={product.remaining}
+                storageKey={`countdown_${product.slug}`}
+              />
             )}
 
             {/* Short desc */}
-            <p className="text-gray-600 text-sm leading-relaxed">{product.shortDesc}</p>
-
-            {/* Detail link */}
-            <a
-              href="#description"
-              className="text-accent text-sm font-medium hover:underline inline-flex items-center gap-1"
-            >
-              <Eye size={15} />
-              Voir le détail complet
-            </a>
+            <p className="text-gray-600 text-sm leading-relaxed border-l-4 border-gray-200 pl-3">
+              {product.shortDesc}
+            </p>
 
             {/* CTA buttons */}
-            <div className="flex flex-col gap-3 pt-2">
+            <div className="flex flex-col gap-3 pt-1">
               {product.externalLink && (
                 <a
                   href={product.externalLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 border-2 border-primary text-primary rounded-btn py-3 font-bold hover:bg-primary hover:text-white transition-all"
+                  className="flex items-center justify-center gap-2 border-2 border-primary text-primary rounded-btn py-3.5 font-bold hover:bg-primary hover:text-white transition-all text-base"
                 >
                   <ExternalLink size={18} />
-                  Voir le produit
+                  Voir la description complète du produit
                 </a>
               )}
               <button
                 onClick={handleBuy}
-                className="flex items-center justify-center gap-2 bg-accent hover:bg-accent-dark text-white rounded-btn py-3 font-bold text-lg shadow-lg hover:scale-[1.02] transition-all"
+                className="flex items-center justify-center gap-2 bg-primary hover:bg-gray-800 text-white rounded-btn py-4 font-bold text-lg shadow-lg hover:scale-[1.02] transition-all"
               >
                 {product.externalLink ? <ExternalLink size={20} /> : <ShoppingCart size={20} />}
-                Acheter maintenant
+                Télécharger maintenant
               </button>
+            </div>
+
+            {/* Payment methods */}
+            <div>
+              <p className="text-xs text-gray-500 text-center">Moyens de paiement disponibles</p>
+              <PaymentIcons />
             </div>
           </motion.div>
         </div>
@@ -234,10 +351,10 @@ export default function ProductDetail() {
             className="mt-14"
           >
             <h2 className="text-xl font-bold text-primary mb-4">Vidéo de présentation</h2>
-            <div className="rounded-card overflow-hidden aspect-video bg-black max-w-3xl">
+            <div className="rounded-card overflow-hidden aspect-video bg-black max-w-3xl shadow-lg">
               <iframe
                 src={product.videoUrl}
-                title={`Vidéo - ${product.name}`}
+                title={`Vidéo — ${product.name}`}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
                 className="w-full h-full"
@@ -255,49 +372,50 @@ export default function ProductDetail() {
           viewport={{ once: true }}
           className="mt-14 max-w-3xl"
         >
-          <h2 className="text-xl font-bold text-primary mb-4">Description courte</h2>
-          <p className="text-gray-700 leading-relaxed text-base mb-8">{product.shortDesc}</p>
-
-          <h2 className="text-xl font-bold text-primary mb-4">Description détaillée</h2>
-          <div className="prose prose-gray max-w-none">
-            {product.fullDesc.split('\n\n').map((para, i) => (
-              <p key={i} className="text-gray-700 leading-relaxed mb-4">
-                {para}
-              </p>
-            ))}
-          </div>
+          <h2 className="text-2xl font-extrabold text-primary mb-6">Description du produit</h2>
+          <FormattedDescription text={product.fullDesc} features={product.features} />
         </motion.div>
       </div>
 
-      {/* Sticky bottom bar */}
+      {/* ── Sticky bottom bar ── */}
       <AnimatePresence>
         {showSticky && (
           <motion.div
             initial={{ y: 100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.28 }}
             className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-2xl"
           >
             <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-4">
-              <img
-                src={product.thumbnail}
-                alt={product.name}
-                className="w-12 h-12 rounded object-cover flex-shrink-0"
-              />
+              {/* Thumbnail */}
+              <div
+                className="w-12 h-12 rounded overflow-hidden bg-gray-200 flex-shrink-0"
+                style={{ background: 'linear-gradient(135deg,#1a1a2e,#16213e)' }}
+              >
+                <img
+                  src={product.thumbnail}
+                  alt={product.name}
+                  className="w-full h-full object-cover"
+                  onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                />
+              </div>
+              {/* Info */}
               <div className="flex-1 min-w-0">
-                <p className="text-primary font-semibold text-sm truncate">{product.name}</p>
-                <div className="flex items-center gap-2">
+                <p className="text-primary font-semibold text-sm truncate leading-tight">{product.name}</p>
+                <div className="flex items-center gap-3 mt-0.5">
                   <StarRating rating={product.rating} size={12} />
-                  <span className="text-accent font-bold text-sm">{displayPrice}</span>
+                  <span className="text-gray-400 line-through text-xs">{displayOldPrice}</span>
+                  <span className="text-primary font-extrabold text-sm">{displayPrice}</span>
                 </div>
               </div>
+              {/* Buy button */}
               <button
                 onClick={handleBuy}
-                className="flex-shrink-0 flex items-center gap-2 bg-accent hover:bg-accent-dark text-white rounded-btn px-5 py-2.5 font-bold text-sm transition"
+                className="flex-shrink-0 flex items-center gap-2 bg-primary hover:bg-gray-800 text-white rounded-btn px-5 py-2.5 font-bold text-sm transition"
               >
-                <ShoppingCart size={16} />
-                Acheter
+                {product.externalLink ? <ExternalLink size={15} /> : <ShoppingCart size={15} />}
+                Télécharger
               </button>
             </div>
           </motion.div>

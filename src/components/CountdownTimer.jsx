@@ -1,24 +1,24 @@
 import { useState, useEffect } from 'react';
+import { Timer } from 'lucide-react';
 
 function pad(n) {
   return String(n).padStart(2, '0');
 }
 
-// Set a target date 72 hours from first load, stored in sessionStorage
-function getTargetDate() {
-  const stored = sessionStorage.getItem('civilplus_countdown');
+function getTargetDate(key) {
+  const stored = sessionStorage.getItem(key);
   if (stored) {
     const date = new Date(stored);
     if (date > new Date()) return date;
   }
   const target = new Date(Date.now() + 72 * 60 * 60 * 1000);
-  sessionStorage.setItem('civilplus_countdown', target.toISOString());
+  sessionStorage.setItem(key, target.toISOString());
   return target;
 }
 
-export default function CountdownTimer() {
+export default function CountdownTimer({ sold = 148, remaining = 17, storageKey = 'civilplus_countdown' }) {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-  const [targetDate] = useState(getTargetDate);
+  const [targetDate] = useState(() => getTargetDate(storageKey));
 
   useEffect(() => {
     const calc = () => {
@@ -27,35 +27,72 @@ export default function CountdownTimer() {
         setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
         return;
       }
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-      setTimeLeft({ days, hours, minutes, seconds });
+      setTimeLeft({
+        days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+        minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
+        seconds: Math.floor((diff % (1000 * 60)) / 1000),
+      });
     };
     calc();
     const id = setInterval(calc, 1000);
     return () => clearInterval(id);
   }, [targetDate]);
 
+  const total = sold + remaining;
+  const soldPct = Math.round((sold / total) * 100);
+
   return (
-    <div className="flex items-center gap-2">
-      <span className="text-sm font-medium text-gray-600">Offre expire dans :</span>
-      <div className="flex items-center gap-1">
-        {[
-          { label: 'J', value: timeLeft.days },
-          { label: 'H', value: timeLeft.hours },
-          { label: 'M', value: timeLeft.minutes },
-          { label: 'S', value: timeLeft.seconds },
-        ].map(({ label, value }, idx) => (
-          <div key={label} className="flex items-center gap-1">
-            <div className="bg-primary text-white rounded text-center min-w-[40px] py-1 px-2">
-              <span className="text-lg font-bold font-mono">{pad(value)}</span>
-              <div className="text-xs opacity-70">{label}</div>
+    <div className="bg-white border border-gray-200 rounded-card overflow-hidden">
+      {/* Sold / Remaining bar */}
+      <div className="px-4 pt-4 pb-2">
+        <div className="flex justify-between text-xs font-semibold text-gray-600 mb-1.5">
+          <span>Vendu : <span className="text-primary font-bold">{sold}</span></span>
+          <span>Restant : <span className="text-red-500 font-bold">{remaining}</span></span>
+        </div>
+        <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+          <div
+            className="h-full bg-red-500 rounded-full transition-all duration-500"
+            style={{ width: `${soldPct}%` }}
+          />
+        </div>
+        <p className="text-xs text-red-500 font-semibold mt-1.5 flex items-center gap-1">
+          <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+          Offre à durée limitée
+        </p>
+      </div>
+
+      {/* Divider */}
+      <div className="border-t border-gray-100 mx-4" />
+
+      {/* Timer */}
+      <div className="px-4 py-3">
+        <p className="text-xs text-gray-500 text-center mb-2 flex items-center justify-center gap-1">
+          <Timer size={13} />
+          L'offre se termine dans
+        </p>
+        <div className="flex items-center justify-center gap-2">
+          {[
+            { label: 'Jours', value: timeLeft.days },
+            { label: 'Heures', value: timeLeft.hours },
+            { label: 'Minutes', value: timeLeft.minutes },
+            { label: 'Secondes', value: timeLeft.seconds },
+          ].map(({ label, value }, idx) => (
+            <div key={label} className="flex items-center gap-2">
+              <div className="flex flex-col items-center">
+                <div className="bg-gray-100 rounded-lg min-w-[52px] py-2 px-1 text-center">
+                  <span className="text-2xl font-extrabold text-primary font-mono tabular-nums leading-none">
+                    {pad(value)}
+                  </span>
+                </div>
+                <span className="text-[10px] text-gray-500 mt-1 uppercase tracking-wide">{label}</span>
+              </div>
+              {idx < 3 && (
+                <span className="text-primary font-bold text-xl mb-4 select-none">:</span>
+              )}
             </div>
-            {idx < 3 && <span className="text-primary font-bold text-xl">:</span>}
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );

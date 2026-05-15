@@ -5,20 +5,26 @@ function pad(n) {
   return String(n).padStart(2, '0');
 }
 
-function getTargetDate(key) {
+function getTargetDate(key, hours = 72) {
   const stored = sessionStorage.getItem(key);
   if (stored) {
     const date = new Date(stored);
     if (date > new Date()) return date;
   }
-  const target = new Date(Date.now() + 72 * 60 * 60 * 1000);
+  const target = new Date(Date.now() + hours * 60 * 60 * 1000);
   sessionStorage.setItem(key, target.toISOString());
   return target;
 }
 
-export default function CountdownTimer({ sold = 148, remaining = 17, storageKey = 'civilplus_countdown' }) {
+export default function CountdownTimer({
+  storageKey = 'civilplus_countdown',
+  hours = 72,
+  showProgress = false,
+  sold = 0,
+  remaining = 0,
+}) {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-  const [targetDate] = useState(() => getTargetDate(storageKey));
+  const [targetDate] = useState(() => getTargetDate(storageKey, hours));
 
   useEffect(() => {
     const calc = () => {
@@ -40,48 +46,47 @@ export default function CountdownTimer({ sold = 148, remaining = 17, storageKey 
   }, [targetDate]);
 
   const total = sold + remaining;
-  const soldPct = Math.round((sold / total) * 100);
+  const soldPct = total > 0 ? Math.round((sold / total) * 100) : 0;
 
   return (
     <div className="bg-white border border-gray-200 rounded-card overflow-hidden">
-      {/* Sold / Remaining bar */}
-      <div className="px-4 pt-4 pb-2">
-        <div className="flex justify-between text-xs font-semibold text-gray-600 mb-1.5">
-          <span>Vendu : <span className="text-primary font-bold">{sold}</span></span>
-          <span>Restant : <span className="text-red-500 font-bold">{remaining}</span></span>
-        </div>
-        <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-          <div
-            className="h-full bg-red-500 rounded-full transition-all duration-500"
-            style={{ width: `${soldPct}%` }}
-          />
-        </div>
-        <p className="text-xs text-red-500 font-semibold mt-1.5 flex items-center gap-1">
-          <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
-          Offre à durée limitée
-        </p>
-      </div>
+      {/* Optional Sold / Remaining bar */}
+      {showProgress && (
+        <>
+          <div className="px-4 pt-4 pb-2">
+            <div className="flex justify-between text-xs font-semibold text-gray-600 mb-1.5">
+              <span>Vendu : <span className="text-primary font-bold">{sold}</span></span>
+              <span>Restant : <span className="text-red-500 font-bold">{remaining}</span></span>
+            </div>
+            <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+              <div className="h-full bg-red-500 rounded-full transition-all duration-500" style={{ width: `${soldPct}%` }} />
+            </div>
+            <p className="text-xs text-red-500 font-semibold mt-1.5 flex items-center gap-1">
+              <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+              Offre à durée limitée
+            </p>
+          </div>
+          <div className="border-t border-gray-100 mx-4" />
+        </>
+      )}
 
-      {/* Divider */}
-      <div className="border-t border-gray-100 mx-4" />
-
-      {/* Timer */}
-      <div className="px-4 py-3">
-        <p className="text-xs text-gray-500 text-center mb-2 flex items-center justify-center gap-1">
+      {/* Timer (always shown) */}
+      <div className="px-4 py-4">
+        <p className="text-xs text-gray-500 text-center mb-3 flex items-center justify-center gap-1.5 font-medium uppercase tracking-wide">
           <Timer size={13} />
           L'offre se termine dans
         </p>
-        <div className="flex items-center justify-center gap-2">
+        <div className="flex items-center justify-center gap-2 md:gap-3">
           {[
             { label: 'Jours', value: timeLeft.days },
             { label: 'Heures', value: timeLeft.hours },
             { label: 'Minutes', value: timeLeft.minutes },
             { label: 'Secondes', value: timeLeft.seconds },
           ].map(({ label, value }, idx) => (
-            <div key={label} className="flex items-center gap-2">
+            <div key={label} className="flex items-center gap-2 md:gap-3">
               <div className="flex flex-col items-center">
-                <div className="bg-gray-100 rounded-lg min-w-[52px] py-2 px-1 text-center">
-                  <span className="text-2xl font-extrabold text-primary font-mono tabular-nums leading-none">
+                <div className="bg-gray-100 rounded-lg min-w-[52px] md:min-w-[60px] py-2 px-2 text-center">
+                  <span className="text-2xl md:text-3xl font-extrabold text-primary font-mono tabular-nums leading-none">
                     {pad(value)}
                   </span>
                 </div>

@@ -15,7 +15,7 @@ import { trackProductView, trackInitiateCheckout } from '../utils/analytics';
 // ─── Payment method SVGs ─────────────────────────────────────────────────────
 function PaymentIcons() {
   return (
-    <div className="flex flex-wrap items-center gap-2 mt-3">
+    <div className="flex flex-wrap items-center justify-center gap-2">
       {/* Visa */}
       <div className="border border-gray-200 rounded px-2 py-1 bg-white h-8 flex items-center" title="Visa">
         <svg viewBox="0 0 48 16" className="h-4 w-auto" aria-label="Visa">
@@ -66,7 +66,6 @@ function FormattedDescription({ text, features }) {
   const lines = text.split('\n');
   return (
     <div className="space-y-4 text-gray-700 text-[15px] leading-relaxed">
-      {/* Feature checklist */}
       {features && features.length > 0 && (
         <div className="bg-gray-50 rounded-card p-5 border border-gray-100">
           <p className="font-bold text-primary mb-3 flex items-center gap-2">
@@ -83,10 +82,8 @@ function FormattedDescription({ text, features }) {
           </ul>
         </div>
       )}
-      {/* Paragraphs */}
       {lines.map((line, i) => {
         if (!line.trim()) return null;
-        // Bold headings (lines ending with :)
         if (line.startsWith('**') || (line.endsWith(':') && line.length < 60)) {
           return (
             <h3 key={i} className="font-bold text-primary text-base mt-5 first:mt-0">
@@ -96,7 +93,7 @@ function FormattedDescription({ text, features }) {
         }
         if (line.startsWith('- ')) {
           return (
-            <li key={i} className="flex items-start gap-2 text-sm ml-2">
+            <li key={i} className="flex items-start gap-2 text-sm ml-2 list-none">
               <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-gray-400 flex-shrink-0" />
               <span>{line.slice(2)}</span>
             </li>
@@ -121,11 +118,11 @@ export default function ProductDetail() {
   useEffect(() => {
     if (product) {
       trackProductView(product);
+      setSelectedImage(0);
       window.scrollTo(0, 0);
     }
   }, [product]);
 
-  // Show sticky bar once buy zone scrolls out of view
   useEffect(() => {
     const handleScroll = () => {
       if (buyZoneRef.current) {
@@ -169,7 +166,7 @@ export default function ProductDetail() {
 
   return (
     <div className="min-h-screen bg-white pb-24 md:pb-0">
-      {/* Reviews auto-scroll carousel */}
+      {/* Reviews auto-scroll carousel — constrained to max-w-7xl with edge fade */}
       <ReviewsCarousel reviews={product.reviews} />
 
       {/* Breadcrumb */}
@@ -183,7 +180,7 @@ export default function ProductDetail() {
         </button>
       </div>
 
-      {/* Main product section */}
+      {/* ── Main product section ── */}
       <div className="max-w-7xl mx-auto px-4 md:px-6 pb-10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
 
@@ -194,7 +191,7 @@ export default function ProductDetail() {
             transition={{ duration: 0.5 }}
           >
             {/* Main image */}
-            <div className="relative rounded-card overflow-hidden bg-gray-100 mb-3 aspect-square md:aspect-video">
+            <div className="relative rounded-card overflow-hidden bg-gray-100 mb-3 aspect-square">
               <AnimatePresence mode="wait">
                 <motion.img
                   key={selectedImage}
@@ -205,7 +202,7 @@ export default function ProductDetail() {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.2 }}
-                  onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                  onError={(e) => { e.currentTarget.style.opacity = '0.2'; }}
                 />
               </AnimatePresence>
               {product.images.length > 1 && (
@@ -224,14 +221,14 @@ export default function ProductDetail() {
 
             {/* Sub-thumbnails */}
             {product.images.length > 1 && (
-              <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-thin">
+              <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-thin">
                 {product.images.map((img, i) => (
                   <button key={i} onClick={() => setSelectedImage(i)}
-                    className={`flex-shrink-0 w-20 h-14 rounded overflow-hidden border-2 transition ${
+                    className={`flex-shrink-0 w-16 h-16 md:w-20 md:h-20 rounded overflow-hidden border-2 transition ${
                       selectedImage === i ? 'border-primary' : 'border-gray-200 hover:border-gray-400'
                     }`}>
                     <img src={img} alt={`Vue ${i + 1}`} className="w-full h-full object-cover"
-                      onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                      onError={(e) => { e.currentTarget.style.background = '#f0f0f0'; }} />
                   </button>
                 ))}
               </div>
@@ -262,7 +259,7 @@ export default function ProductDetail() {
             ref={buyZoneRef}
           >
             {/* Stats row */}
-            <div className="flex items-center gap-4 text-sm text-gray-500">
+            <div className="flex flex-wrap items-center gap-3 text-sm text-gray-500">
               <span className="flex items-center gap-1">
                 <Users size={14} />
                 <strong className="text-primary">{product.reviewCount}</strong> avis
@@ -276,33 +273,28 @@ export default function ProductDetail() {
               </span>
             </div>
 
-            {/* Name */}
             <h1 className="text-xl md:text-2xl font-extrabold text-primary leading-tight">
               {product.name}
             </h1>
 
-            {/* Stars */}
             <div className="flex items-center gap-3">
               <StarRating rating={product.rating} size={18} />
               <span className="text-sm text-gray-500">{product.reviewCount} avis vérifiés</span>
             </div>
 
             {/* Price */}
-            <div className="flex items-baseline gap-3">
-              <span className="text-gray-400 line-through text-base">
-                {displayOldPrice}
-              </span>
+            <div className="flex items-baseline gap-3 flex-wrap">
+              <span className="text-gray-400 line-through text-base">{displayOldPrice}</span>
               <span className="text-primary font-extrabold text-4xl">{displayPrice}</span>
               <span className="bg-red-100 text-red-600 text-sm font-bold px-2 py-0.5 rounded-full">
                 -{discountPct}%
               </span>
             </div>
 
-            {/* Countdown */}
+            {/* Countdown (timer only — no progress bar) */}
             {product.countdown && (
               <CountdownTimer
-                sold={product.sold}
-                remaining={product.remaining}
+                showProgress={false}
                 storageKey={`countdown_${product.slug}`}
               />
             )}
@@ -334,15 +326,15 @@ export default function ProductDetail() {
               </button>
             </div>
 
-            {/* Payment methods */}
-            <div>
-              <p className="text-xs text-gray-500 text-center">Moyens de paiement disponibles</p>
+            {/* Payment methods — centered relative to button */}
+            <div className="flex flex-col items-center gap-2">
+              <p className="text-xs text-gray-500">Moyens de paiement disponibles</p>
               <PaymentIcons />
             </div>
           </motion.div>
         </div>
 
-        {/* Video section */}
+        {/* Video section — centered relative to full block */}
         {product.videoUrl && (
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -350,8 +342,8 @@ export default function ProductDetail() {
             viewport={{ once: true }}
             className="mt-14"
           >
-            <h2 className="text-xl font-bold text-primary mb-4">Vidéo de présentation</h2>
-            <div className="rounded-card overflow-hidden aspect-video bg-black max-w-3xl shadow-lg">
+            <h2 className="text-xl font-bold text-primary mb-4 text-center">Vidéo de présentation</h2>
+            <div className="rounded-card overflow-hidden aspect-video bg-black mx-auto max-w-3xl shadow-lg">
               <iframe
                 src={product.videoUrl}
                 title={`Vidéo — ${product.name}`}
@@ -364,15 +356,17 @@ export default function ProductDetail() {
           </motion.div>
         )}
 
-        {/* Description */}
+        {/* Description — centered relative to upper block */}
         <motion.div
           id="description"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mt-14 max-w-3xl"
+          className="mt-14 mx-auto max-w-3xl"
         >
-          <h2 className="text-2xl font-extrabold text-primary mb-6">Description du produit</h2>
+          <h2 className="text-2xl font-extrabold text-primary mb-6 text-center">
+            Description du produit
+          </h2>
           <FormattedDescription text={product.fullDesc} features={product.features} />
         </motion.div>
       </div>
@@ -387,35 +381,29 @@ export default function ProductDetail() {
             transition={{ duration: 0.28 }}
             className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-2xl"
           >
-            <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-4">
-              {/* Thumbnail */}
-              <div
-                className="w-12 h-12 rounded overflow-hidden bg-gray-200 flex-shrink-0"
-                style={{ background: 'linear-gradient(135deg,#1a1a2e,#16213e)' }}
-              >
+            <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-3 md:gap-4">
+              <div className="w-12 h-12 rounded overflow-hidden bg-gray-100 flex-shrink-0">
                 <img
                   src={product.thumbnail}
                   alt={product.name}
                   className="w-full h-full object-cover"
-                  onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                  onError={(e) => { e.currentTarget.style.opacity = '0.2'; }}
                 />
               </div>
-              {/* Info */}
               <div className="flex-1 min-w-0">
-                <p className="text-primary font-semibold text-sm truncate leading-tight">{product.name}</p>
-                <div className="flex items-center gap-3 mt-0.5">
-                  <StarRating rating={product.rating} size={12} />
-                  <span className="text-gray-400 line-through text-xs">{displayOldPrice}</span>
-                  <span className="text-primary font-extrabold text-sm">{displayPrice}</span>
+                <p className="text-primary font-semibold text-xs md:text-sm truncate leading-tight">{product.name}</p>
+                <div className="flex items-center gap-2 md:gap-3 mt-0.5">
+                  <StarRating rating={product.rating} size={11} />
+                  <span className="text-gray-400 line-through text-[10px] md:text-xs">{displayOldPrice}</span>
+                  <span className="text-primary font-extrabold text-xs md:text-sm">{displayPrice}</span>
                 </div>
               </div>
-              {/* Buy button */}
               <button
                 onClick={handleBuy}
-                className="flex-shrink-0 flex items-center gap-2 bg-primary hover:bg-gray-800 text-white rounded-btn px-5 py-2.5 font-bold text-sm transition"
+                className="flex-shrink-0 flex items-center gap-1.5 bg-primary hover:bg-gray-800 text-white rounded-btn px-3 md:px-5 py-2.5 font-bold text-xs md:text-sm transition"
               >
-                {product.externalLink ? <ExternalLink size={15} /> : <ShoppingCart size={15} />}
-                Télécharger
+                {product.externalLink ? <ExternalLink size={14} /> : <ShoppingCart size={14} />}
+                <span className="hidden sm:inline">Télécharger</span>
               </button>
             </div>
           </motion.div>

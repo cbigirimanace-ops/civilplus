@@ -28,12 +28,8 @@ function PageWrapper({ children }) {
   );
 }
 
-// Pages that include their own Footer
-const PAGES_WITH_FOOTER = ['/nos-services', '/a-propos', '/contact'];
-
 export default function App() {
   const location = useLocation();
-  const hasOwnFooter = PAGES_WITH_FOOTER.some((p) => location.pathname.startsWith(p));
 
   return (
     <div className="min-h-screen flex flex-col font-sans bg-white">
@@ -91,7 +87,7 @@ export default function App() {
                       <p className="text-gray-500 mb-6">Cette page n'existe pas.</p>
                       <a
                         href="/"
-                        className="bg-accent text-white px-6 py-3 rounded-btn font-semibold hover:bg-accent-dark transition"
+                        className="bg-primary text-white px-6 py-3 rounded-btn font-semibold hover:bg-gray-800 transition"
                       >
                         Retour à l'accueil
                       </a>
@@ -103,7 +99,7 @@ export default function App() {
           </Routes>
         </AnimatePresence>
       </main>
-      {!hasOwnFooter && <Footer />}
+      <Footer />
     </div>
   );
 }

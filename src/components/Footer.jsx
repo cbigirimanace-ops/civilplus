@@ -15,7 +15,7 @@ export default function Footer() {
           <div className="md:col-span-1">
             <div className="flex items-center gap-1 mb-4">
               <span className="text-white font-extrabold text-2xl">Civil</span>
-              <span className="text-accent font-extrabold text-2xl">+</span>
+              <span className="text-white font-extrabold text-2xl">+</span>
             </div>
             <p className="text-sm text-gray-400 leading-relaxed mb-5">
               Outils professionnels pour ingénieurs civils en Afrique et dans le monde.

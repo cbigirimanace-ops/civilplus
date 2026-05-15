@@ -8,8 +8,10 @@ export default {
     extend: {
       colors: {
         primary: '#111111',
-        accent: '#4CAF50',
-        'accent-dark': '#388E3C',
+        // Accent kept dark/neutral so the site reads monochrome.
+        // (Previously green — switched per design update.)
+        accent: '#111111',
+        'accent-dark': '#000000',
         'gray-light': '#F5F5F5',
       },
       fontFamily: {

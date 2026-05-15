@@ -66,7 +66,7 @@ export default function Navbar() {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-1">
             <span className="text-white font-extrabold text-2xl tracking-tight">Civil</span>
-            <span className="text-accent font-extrabold text-2xl">+</span>
+            <span className="text-white font-extrabold text-2xl">+</span>
           </Link>
 
           {/* Desktop nav */}

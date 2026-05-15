@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Phone, Mail, MapPin, Send, CheckCircle } from 'lucide-react';
-import Footer from '../components/Footer';
 import { trackPageView, trackEvent } from '../utils/analytics';
 
 const contactInfo = [
@@ -274,7 +273,6 @@ export default function Contact() {
         </div>
       </section>
 
-      <Footer />
     </div>
   );
 }

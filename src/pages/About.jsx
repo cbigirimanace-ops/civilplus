@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Target, Eye, Award, Users, Lightbulb, Globe } from 'lucide-react';
-import Footer from '../components/Footer';
 import { trackPageView } from '../utils/analytics';
 
 const values = [
@@ -196,7 +195,6 @@ export default function About() {
         </div>
       </section>
 
-      <Footer />
     </div>
   );
 }

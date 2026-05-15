@@ -1,36 +1,31 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Phone, ArrowRight, Building2, Wrench } from 'lucide-react';
 import { trackPageView } from '../utils/analytics';
 
 const services = [
   {
     id: 1,
-    title: 'Projet de Bâtiment',
-    description:
-      "De la conception à la livraison, nous déployons une méthodologie rigoureuse pour piloter chaque phase de votre projet : étude de faisabilité, conception architecturale et structurale, étude de prix et suivi de projet. En confiant vos travaux à nos experts, vous bénéficiez d'un ouvrage alliant confort, sécurité et parfaite conformité aux normes en vigueur.",
-    icon: Building2,
-    dotColor: 'bg-primary',
-    image: '/images/projet-batiment.jpg',
-  },
-  {
-    id: 2,
     title: 'Construction Métallique',
     description:
       "Confiez l'étude technique complète de vos structures métalliques à notre équipe d'ingénieurs. Grâce à une modélisation rigoureuse et des calculs de résistance de pointe, nous garantissons la conformité, la robustesse et la pérennité de vos infrastructures, même face aux contraintes les plus exigeantes.",
     icon: Wrench,
-    dotColor: 'bg-gray-400',
+    dotColor: 'bg-primary',
     image: '/images/construction-metallique.jpg',
+  },
+  {
+    id: 2,
+    title: 'Projet de Bâtiment',
+    description:
+      "De la conception à la livraison, nous déployons une méthodologie rigoureuse pour piloter chaque phase de votre projet : étude de faisabilité, conception architecturale et structurale, étude de prix et suivi de projet. En confiant vos travaux à nos experts, vous bénéficiez d'un ouvrage alliant confort, sécurité et parfaite conformité aux normes en vigueur.",
+    icon: Building2,
+    dotColor: 'bg-gray-400',
+    image: '/images/projet-batiment.jpg',
   },
 ];
 
-const galleryImages = [
-  { src: '/images/gallery-1.jpg', alt: 'Chantier de construction béton armé' },
-  { src: '/images/gallery-2.jpg', alt: 'Structure métallique industrielle' },
-  { src: '/images/gallery-3.jpg', alt: 'Projet résidentiel livré' },
-  { src: '/images/projet-batiment.jpg', alt: 'Bâtiment en construction' },
-  { src: '/images/construction-metallique.jpg', alt: 'Charpente métallique' },
-];
+// Real project photos from "Images projets réalisée"
+const galleryImages = Array.from({ length: 7 }, (_, i) => `/images/gallery/gallery-${i + 17}.jpg`);
 
 export default function Services() {
   const [galleryIndex, setGalleryIndex] = useState(0);
@@ -109,12 +104,10 @@ export default function Services() {
                 transition={{ delay: i * 0.15 }}
                 className="flex flex-col md:flex-row gap-0 rounded-card overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
               >
-                {/* Image */}
                 <div
                   className="w-full md:w-64 h-48 md:h-auto flex-shrink-0 bg-gray-200 bg-cover bg-center"
                   style={{ backgroundImage: `url('${service.image}')` }}
                 />
-                {/* Content */}
                 <div className="flex-1 p-6 flex flex-col justify-between bg-white">
                   <div>
                     <div className="flex items-center gap-3 mb-3">
@@ -141,23 +134,23 @@ export default function Services() {
         </div>
       </section>
 
-      {/* ── Gallery carousel ── */}
+      {/* ── Gallery carousel — real project photos ── */}
       <section className="bg-primary py-14">
         <div className="relative max-w-5xl mx-auto px-12">
           <div className="overflow-hidden rounded-card aspect-video bg-gray-900">
-            <motion.img
-              key={galleryIndex}
-              src={galleryImages[galleryIndex].src}
-              alt={galleryImages[galleryIndex].alt}
-              className="w-full h-full object-cover"
-              initial={{ opacity: 0, scale: 1.05 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              onError={(e) => {
-                e.currentTarget.style.background = 'linear-gradient(135deg,#1a1a2e,#302b63)';
-                e.currentTarget.style.display = 'none';
-              }}
-            />
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={galleryIndex}
+                src={galleryImages[galleryIndex]}
+                alt={`Projet réalisé ${galleryIndex + 1}`}
+                className="w-full h-full object-cover"
+                initial={{ opacity: 0, scale: 1.05 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5 }}
+                onError={(e) => { e.currentTarget.style.opacity = '0.3'; }}
+              />
+            </AnimatePresence>
           </div>
 
           <button
@@ -175,7 +168,6 @@ export default function Services() {
             <ChevronRight size={22} />
           </button>
 
-          {/* Dots */}
           <div className="flex justify-center gap-2 mt-5">
             {galleryImages.map((_, i) => (
               <button
@@ -191,12 +183,12 @@ export default function Services() {
         </div>
       </section>
 
-      {/* ── CTA ── */}
-      <section className="bg-primary">
+      {/* ── CTA — increased top/bottom padding ── */}
+      <section className="bg-white py-20 md:py-28">
         <div className="max-w-5xl mx-auto px-4">
-          <div className="flex flex-col md:flex-row rounded-2xl overflow-hidden my-10 shadow-xl">
-            <div className="flex-1 bg-gray-900 p-10 flex flex-col justify-center">
-              <h2 className="text-white text-3xl font-extrabold leading-tight mb-4">
+          <div className="flex flex-col md:flex-row rounded-2xl overflow-hidden shadow-xl my-4">
+            <div className="flex-1 bg-primary p-10 md:p-12 flex flex-col justify-center">
+              <h2 className="text-white text-3xl md:text-4xl font-extrabold leading-tight mb-5">
                 Obtenez un devis<br />personnalisé
               </h2>
               <a
@@ -206,13 +198,13 @@ export default function Services() {
                 Nous contacter <ArrowRight size={16} />
               </a>
             </div>
-            <div className="flex-1 bg-white p-10 flex flex-col justify-center items-start md:border-l border-gray-200">
-              <p className="text-5xl font-extrabold text-primary mb-2">+50 clients</p>
-              <p className="text-gray-500 text-sm">
+            <div className="flex-1 bg-white p-10 md:p-12 flex flex-col justify-center items-start md:border-l border-gray-100">
+              <p className="text-5xl md:text-6xl font-extrabold text-primary mb-3">+50 clients</p>
+              <p className="text-gray-500 text-sm leading-relaxed">
                 Nous accompagnons des ingénieurs et entreprises à travers toute l'Afrique
                 de l'Ouest et Centrale.
               </p>
-              <div className="flex items-center gap-2 mt-4 text-gray-600 text-sm">
+              <div className="flex items-center gap-2 mt-5 text-gray-600 text-sm">
                 <Phone size={16} />
                 +237 650 000 749
               </div>

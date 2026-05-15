@@ -16,7 +16,7 @@ const FALLBACK_GRADIENTS = [
   'linear-gradient(135deg,#24243e 0%,#302b63 100%)',
 ];
 
-export default function ProductCard({ product }) {
+export default function ProductCard({ product, eager = false }) {
   const { convertPrice } = useCurrency();
 
   const displayPrice = convertPrice(product.price);
@@ -28,8 +28,9 @@ export default function ProductCard({ product }) {
     e.preventDefault();
     e.stopPropagation();
     trackInitiateCheckout(product);
-    if (product.externalLink) {
-      window.open(product.externalLink, '_blank', 'noopener,noreferrer');
+    const target = product.checkoutLink || product.externalLink;
+    if (target) {
+      window.open(target, '_blank', 'noopener,noreferrer');
     } else {
       window.location.href = `/produits/${product.slug}#acheter`;
     }
@@ -49,6 +50,9 @@ export default function ProductCard({ product }) {
         <img
           src={product.thumbnail}
           alt={product.name}
+          loading={eager ? 'eager' : 'lazy'}
+          decoding="async"
+          fetchpriority={eager ? 'high' : 'auto'}
           className="w-full h-full object-cover"
           onError={(e) => { e.currentTarget.style.display = 'none'; }}
         />
@@ -58,36 +62,36 @@ export default function ProductCard({ product }) {
         </span>
       </div>
 
-      {/* Body */}
-      <div className="flex flex-col gap-3 p-4 flex-1">
-        <h3 className="text-sm font-bold text-primary leading-snug line-clamp-2">
+      {/* Body — extra spacing between description and buttons */}
+      <div className="flex flex-col p-4 flex-1">
+        <h3 className="text-sm font-bold text-primary leading-snug line-clamp-2 mb-3">
           {product.name}
         </h3>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 mb-3">
           <StarRating rating={product.rating} size={14} />
           <span className="text-xs text-gray-400">({product.reviewCount})</span>
         </div>
 
-        <div className="flex items-baseline gap-2 mt-auto">
+        <div className="flex items-baseline gap-2 mb-5 mt-auto">
           <span className="text-gray-400 line-through text-xs">{displayOldPrice}</span>
           <span className="text-primary font-extrabold text-lg">{displayPrice}</span>
         </div>
 
-        {/* Buttons — always visible */}
-        <div className="flex gap-2 pt-1">
+        {/* Buttons — always visible, more breathing space above */}
+        <div className="flex gap-2 pt-2 border-t border-gray-100">
           <Link
             to={`/produits/${product.slug}`}
-            className="flex-1 flex items-center justify-center gap-1.5 border border-gray-300 text-primary rounded-btn py-2 text-xs font-semibold hover:border-primary hover:bg-gray-50 transition-all"
+            className="flex-1 flex items-center justify-center gap-1.5 border border-gray-300 text-primary rounded-btn py-2 text-xs font-semibold hover:border-primary hover:bg-gray-50 transition-all mt-2"
           >
             <Eye size={14} />
             Voir le produit
           </Link>
           <button
             onClick={handleBuy}
-            className="flex-1 flex items-center justify-center gap-1.5 bg-primary text-white rounded-btn py-2 text-xs font-semibold hover:bg-gray-800 transition-all"
+            className="flex-1 flex items-center justify-center gap-1.5 bg-primary text-white rounded-btn py-2 text-xs font-semibold hover:bg-gray-800 transition-all mt-2"
           >
-            {product.externalLink ? <ExternalLink size={14} /> : <ShoppingCart size={14} />}
+            {product.externalLink || product.checkoutLink ? <ExternalLink size={14} /> : <ShoppingCart size={14} />}
             Acheter
           </button>
         </div>

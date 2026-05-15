@@ -54,7 +54,7 @@ export default function Services() {
           style={{ backgroundImage: "url('/images/hero-bg.jpg')" }}
         />
         <div className="absolute inset-0 bg-black/60" />
-        <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 text-white">
+        <div className="relative z-10 max-w-5xl mx-auto px-4 md:px-6 text-white w-full">
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

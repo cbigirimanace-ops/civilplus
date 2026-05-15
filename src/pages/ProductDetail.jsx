@@ -8,6 +8,7 @@ import {
 import StarRating from '../components/StarRating';
 import CountdownTimer from '../components/CountdownTimer';
 import ReviewsCarousel from '../components/ReviewsCarousel';
+import RelatedProducts from '../components/RelatedProducts';
 import { products } from '../data/products';
 import { useCurrency } from '../hooks/useCurrency';
 import { trackProductView, trackInitiateCheckout } from '../utils/analytics';
@@ -154,8 +155,9 @@ export default function ProductDetail() {
 
   const handleBuy = () => {
     trackInitiateCheckout(product);
-    if (product.externalLink) {
-      window.open(product.externalLink, '_blank', 'noopener,noreferrer');
+    const target = product.checkoutLink || product.externalLink;
+    if (target) {
+      window.open(target, '_blank', 'noopener,noreferrer');
     } else {
       alert(`Redirection vers le paiement pour : ${product.name}`);
     }
@@ -197,6 +199,9 @@ export default function ProductDetail() {
                   key={selectedImage}
                   src={product.images[selectedImage]}
                   alt={product.name}
+                  loading={selectedImage === 0 ? 'eager' : 'lazy'}
+                  decoding="async"
+                  fetchpriority={selectedImage === 0 ? 'high' : 'auto'}
                   className="w-full h-full object-cover"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -227,7 +232,9 @@ export default function ProductDetail() {
                     className={`flex-shrink-0 w-16 h-16 md:w-20 md:h-20 rounded overflow-hidden border-2 transition ${
                       selectedImage === i ? 'border-primary' : 'border-gray-200 hover:border-gray-400'
                     }`}>
-                    <img src={img} alt={`Vue ${i + 1}`} className="w-full h-full object-cover"
+                    <img src={img} alt={`Vue ${i + 1}`}
+                      loading="lazy" decoding="async"
+                      className="w-full h-full object-cover"
                       onError={(e) => { e.currentTarget.style.background = '#f0f0f0'; }} />
                   </button>
                 ))}
@@ -370,6 +377,9 @@ export default function ProductDetail() {
           <FormattedDescription text={product.fullDesc} features={product.features} />
         </motion.div>
       </div>
+
+      {/* ── Related products ── */}
+      <RelatedProducts currentSlug={product.slug} />
 
       {/* ── Sticky bottom bar ── */}
       <AnimatePresence>

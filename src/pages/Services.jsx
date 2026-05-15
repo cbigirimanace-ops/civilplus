@@ -24,8 +24,12 @@ const services = [
   },
 ];
 
-// Real project photos from "Images projets réalisée"
-const galleryImages = Array.from({ length: 7 }, (_, i) => `/images/gallery/gallery-${i + 17}.jpg`);
+// All 23 project photos from "Images projets réalisée"
+// PNGs (1-16) = screenshots / renders, JPGs (17-23) = real site photos
+const galleryImages = [
+  ...Array.from({ length: 16 }, (_, i) => `/images/gallery/gallery-${i + 1}.png`),
+  ...Array.from({ length: 7 }, (_, i) => `/images/gallery/gallery-${i + 17}.jpg`),
+];
 
 export default function Services() {
   const [galleryIndex, setGalleryIndex] = useState(0);

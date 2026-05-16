@@ -14,6 +14,7 @@ export default function Navbar() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [bubbleStyle, setBubbleStyle] = useState({});
   const [currencyOpen, setCurrencyOpen] = useState(false);
+  const [mobileCurrencyOpen, setMobileCurrencyOpen] = useState(false);
   const linkRefs = useRef([]);
   const navRef = useRef(null);
   const { currency, availableCurrencies, changeCurrency } = useCurrency();
@@ -54,24 +55,68 @@ export default function Navbar() {
       if (!e.target.closest('[data-currency-dropdown]')) {
         setCurrencyOpen(false);
       }
+      if (!e.target.closest('[data-mobile-currency]')) {
+        setMobileCurrencyOpen(false);
+      }
     };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
+  const renderCurrencyDropdown = (isOpen, close) => (
+    <motion.div
+      initial={{ opacity: 0, y: -8 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="absolute right-0 top-full mt-2 bg-white rounded-card shadow-xl border border-gray-100 min-w-[180px] z-50 overflow-hidden"
+    >
+      {availableCurrencies.map((c) => (
+        <button
+          key={c.code}
+          onClick={() => { changeCurrency(c.code); close(); }}
+          className={`w-full text-left px-3 py-2.5 text-sm flex items-center gap-2 hover:bg-gray-50 transition ${
+            currency.code === c.code ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700'
+          }`}
+        >
+          <span className="w-8 h-5 rounded text-[10px] font-bold bg-gray-100 flex items-center justify-center text-gray-600">
+            {c.countryCode}
+          </span>
+          <span className="text-xs">{c.name}</span>
+        </button>
+      ))}
+    </motion.div>
+  );
+
   return (
     <nav className="sticky top-0 z-50 bg-primary shadow-lg">
-      <div className="max-w-7xl mx-auto px-4 md:px-6">
-        <div className="flex items-center justify-between h-16">
-          <Link to="/" className="flex items-center gap-1">
-            <span className="text-white font-extrabold text-2xl tracking-tight">Civil</span>
-            <span className="text-white font-extrabold text-2xl">+</span>
+      <div className="max-w-7xl mx-auto px-3 md:px-6">
+        <div className="flex items-center gap-2 h-14 md:h-16">
+          {/* Logo — far left */}
+          <Link to="/" className="flex items-center gap-1 flex-shrink-0">
+            <span className="text-white font-extrabold text-xl md:text-2xl tracking-tight">Civil</span>
+            <span className="text-white font-extrabold text-xl md:text-2xl">+</span>
           </Link>
+
+          {/* MOBILE: centered currency (flex-1 pushes it to center between logo and right group) */}
+          <div className="flex-1 flex justify-center md:hidden">
+            <div className="relative" data-mobile-currency>
+              <button
+                onClick={() => setMobileCurrencyOpen(!mobileCurrencyOpen)}
+                className="flex items-center gap-1 text-gray-200 text-xs font-medium px-2.5 py-1.5 rounded-md bg-white/10 hover:bg-white/15 transition"
+                aria-label={t('nav.currency')}
+              >
+                <Globe size={12} />
+                <span className="text-[11px] font-bold">{currency.countryCode}</span>
+                <span className="text-xs">{currency.symbol}</span>
+                <ChevronDown size={12} className={`transition-transform ${mobileCurrencyOpen ? 'rotate-180' : ''}`} />
+              </button>
+              {mobileCurrencyOpen && renderCurrencyDropdown(mobileCurrencyOpen, () => setMobileCurrencyOpen(false))}
+            </div>
+          </div>
 
           {/* Desktop nav */}
           <div
             ref={navRef}
-            className="hidden md:flex items-center gap-1 relative"
+            className="hidden md:flex items-center gap-1 relative flex-1 justify-center"
             onMouseLeave={() => setHoveredIndex(null)}
           >
             <motion.div
@@ -96,8 +141,22 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* Right side: language + currency */}
-          <div className="hidden md:flex items-center gap-2">
+          {/* MOBILE: right-aligned language switch + hamburger */}
+          <div className="flex md:hidden items-center gap-1.5 flex-shrink-0">
+            <div className="bg-white/10 rounded-md px-1.5 py-1">
+              <LanguageSwitch />
+            </div>
+            <button
+              onClick={() => setMobileOpen(!mobileOpen)}
+              className="text-white p-1.5 rounded-lg hover:bg-white/10 transition"
+              aria-label={t('nav.menu')}
+            >
+              {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+            </button>
+          </div>
+
+          {/* Desktop right side: language + currency */}
+          <div className="hidden md:flex items-center gap-2 flex-shrink-0">
             <div className="bg-white/5 rounded-full px-2 py-1">
               <LanguageSwitch />
             </div>
@@ -113,42 +172,13 @@ export default function Navbar() {
                 <span>{currency.symbol}</span>
                 <ChevronDown size={14} className={`transition-transform ${currencyOpen ? 'rotate-180' : ''}`} />
               </button>
-              {currencyOpen && (
-                <motion.div
-                  initial={{ opacity: 0, y: -8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="absolute right-0 top-full mt-2 bg-white rounded-card shadow-xl border border-gray-100 min-w-[200px] z-50 overflow-hidden"
-                >
-                  {availableCurrencies.map((c) => (
-                    <button
-                      key={c.code}
-                      onClick={() => { changeCurrency(c.code); setCurrencyOpen(false); }}
-                      className={`w-full text-left px-4 py-2.5 text-sm flex items-center gap-3 hover:bg-gray-50 transition ${
-                        currency.code === c.code ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700'
-                      }`}
-                    >
-                      <span className="w-8 h-5 rounded text-xs font-bold bg-gray-100 flex items-center justify-center text-gray-600">
-                        {c.countryCode}
-                      </span>
-                      <span>{c.name}</span>
-                    </button>
-                  ))}
-                </motion.div>
-              )}
+              {currencyOpen && renderCurrencyDropdown(currencyOpen, () => setCurrencyOpen(false))}
             </div>
           </div>
-
-          <button
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden text-white p-2 rounded-lg hover:bg-white/10 transition"
-            aria-label={t('nav.menu')}
-          >
-            {mobileOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
         </div>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile menu — only nav links now (currency & language are inline above) */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
@@ -171,32 +201,6 @@ export default function Navbar() {
                   {link.label}
                 </Link>
               ))}
-
-              {/* Mobile language */}
-              <div className="mt-2 pt-2 border-t border-white/10">
-                <p className="text-xs text-gray-500 px-4 mb-1">{t('nav.language')}</p>
-                <div className="px-4">
-                  <LanguageSwitch />
-                </div>
-              </div>
-
-              {/* Mobile currency */}
-              <div className="mt-2 pt-2 border-t border-white/10">
-                <p className="text-xs text-gray-500 px-4 mb-1">{t('nav.currency')}</p>
-                <div className="flex flex-wrap gap-2 px-4">
-                  {availableCurrencies.map((c) => (
-                    <button
-                      key={c.code}
-                      onClick={() => changeCurrency(c.code)}
-                      className={`px-3 py-1.5 rounded-full text-xs font-medium transition ${
-                        currency.code === c.code ? 'bg-white text-primary' : 'bg-white/10 text-gray-300 hover:bg-white/20'
-                      }`}
-                    >
-                      {c.countryCode} {c.symbol}
-                    </button>
-                  ))}
-                </div>
-              </div>
             </div>
           </motion.div>
         )}

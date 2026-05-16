@@ -89,29 +89,29 @@ export default function CountdownTimer({
         </>
       )}
 
-      <div className="px-4 py-4">
-        <p className="text-xs text-gray-500 text-center mb-3 flex items-center justify-center gap-1.5 font-medium uppercase tracking-wide">
-          <Timer size={13} />
+      <div className="px-3 py-2.5">
+        <p className="text-[10px] md:text-[11px] text-gray-500 text-center mb-1.5 flex items-center justify-center gap-1 font-medium uppercase tracking-wide">
+          <Timer size={11} />
           {t('product.countdownTitle')}
         </p>
-        <div className="flex items-center justify-center gap-1.5 md:gap-3">
+        <div className="flex items-center justify-center gap-1 md:gap-2">
           {[
             { label: t('product.days'), value: timeLeft.days },
             { label: t('product.hours'), value: timeLeft.hours },
             { label: t('product.minutes'), value: timeLeft.minutes },
             { label: t('product.seconds'), value: timeLeft.seconds },
           ].map(({ label, value }, idx) => (
-            <div key={idx} className="flex items-center gap-1.5 md:gap-3">
+            <div key={idx} className="flex items-center gap-1 md:gap-2">
               <div className="flex flex-col items-center">
-                <div className="bg-gray-100 rounded-lg min-w-[48px] md:min-w-[60px] py-2 px-2 text-center">
-                  <span className="text-xl md:text-3xl font-extrabold text-primary font-mono tabular-nums leading-none">
+                <div className="bg-gray-100 rounded-md min-w-[42px] md:min-w-[50px] py-1 px-1.5 text-center">
+                  <span className="text-lg md:text-xl font-extrabold text-primary font-mono tabular-nums leading-none">
                     {pad(value)}
                   </span>
                 </div>
-                <span className="text-[10px] text-gray-500 mt-1 uppercase tracking-wide">{label}</span>
+                <span className="text-[9px] text-gray-500 mt-0.5 uppercase tracking-wide">{label}</span>
               </div>
               {idx < 3 && (
-                <span className="text-primary font-bold text-xl mb-4 select-none">:</span>
+                <span className="text-primary font-bold text-base mb-3 select-none">:</span>
               )}
             </div>
           ))}

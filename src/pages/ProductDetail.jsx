@@ -302,7 +302,7 @@ export default function ProductDetail() {
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
-            className="flex flex-col gap-4"
+            className="flex flex-col gap-3 md:gap-3"
             id="acheter"
             ref={buyZoneRef}
           >
@@ -324,7 +324,7 @@ export default function ProductDetail() {
             </div>
 
             {/* Title */}
-            <h1 className="text-xl md:text-2xl font-extrabold text-primary leading-tight">
+            <h1 className="text-lg md:text-xl font-extrabold text-primary leading-tight">
               {product.name}
             </h1>
 
@@ -348,10 +348,10 @@ export default function ProductDetail() {
                   -{discountPct}% {t('product.discount')}
                 </span>
               </div>
-              <div className="flex items-baseline gap-3 flex-wrap">
+              <div className="flex items-baseline gap-2.5 flex-wrap">
                 <span className="text-gray-400 line-through text-sm">{displayOldPrice}</span>
-                <span className="text-primary font-extrabold text-2xl md:text-3xl">{displayPrice}</span>
-                <span className="hidden md:inline-block bg-red-100 text-red-600 text-xs font-bold px-2 py-0.5 rounded-full">
+                <span className="text-primary font-extrabold text-xl md:text-2xl">{displayPrice}</span>
+                <span className="hidden md:inline-block bg-red-100 text-red-600 text-[11px] font-bold px-2 py-0.5 rounded-full">
                   -{discountPct}% {t('product.discount')}
                 </span>
               </div>
@@ -366,39 +366,36 @@ export default function ProductDetail() {
               />
             )}
 
-            {/* ── Light spacing between countdown and short desc ── */}
-            <div className="h-1 md:h-1.5" />
-
             {/* Short desc */}
-            <p className="text-gray-600 text-sm leading-relaxed border-l-4 border-gray-200 pl-3">
+            <p className="text-gray-600 text-sm leading-snug border-l-4 border-gray-200 pl-3">
               {product.shortDesc}
             </p>
 
             {/* CTA buttons — smaller height + font */}
-            <div className="flex flex-col gap-2.5 pt-1">
+            <div className="flex flex-col gap-2">
               {product.externalLink && (
                 <a
                   href={product.externalLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 border-2 border-primary text-primary rounded-btn py-2.5 font-bold hover:bg-primary hover:text-white transition-all text-sm"
+                  className="flex items-center justify-center gap-2 border-2 border-primary text-primary rounded-btn py-2 font-bold hover:bg-primary hover:text-white transition-all text-sm"
                 >
-                  <ExternalLink size={16} />
+                  <ExternalLink size={15} />
                   {t('product.viewFull')}
                 </a>
               )}
               <button
                 onClick={handleBuy}
-                className="flex items-center justify-center gap-2 bg-primary hover:bg-gray-800 text-white rounded-btn py-3 font-bold text-base shadow-lg hover:scale-[1.02] transition-all"
+                className="flex items-center justify-center gap-2 bg-primary hover:bg-gray-800 text-white rounded-btn py-2.5 font-bold text-sm md:text-base shadow-lg hover:scale-[1.02] transition-all"
               >
-                {product.externalLink || product.checkoutLink ? <ExternalLink size={18} /> : <ShoppingCart size={18} />}
+                {product.externalLink || product.checkoutLink ? <ExternalLink size={16} /> : <ShoppingCart size={16} />}
                 {t('product.buy')}
               </button>
             </div>
 
             {/* Payment methods — centered relative to button */}
-            <div className="flex flex-col items-center gap-2 pt-1">
-              <p className="text-xs text-gray-500">{t('product.paymentMethods')}</p>
+            <div className="flex flex-col items-center gap-1.5">
+              <p className="text-[11px] text-gray-500">{t('product.paymentMethods')}</p>
               <PaymentIcons />
             </div>
           </motion.div>

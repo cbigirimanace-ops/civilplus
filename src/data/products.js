@@ -421,7 +421,7 @@ export const products = [
     id: 8,
     slug: 'formation-civil-3d-2025',
     name: 'FORMATION CIVIL 3D 2025 : MAÎTRISEZ AUTOCAD CIVIL 3D DE A À Z',
-    shortDesc: 'Formation 100% pratique AutoCAD Civil 3D 2025 : routes, terrassements, réseaux, MNT et profils en long.',
+    shortDesc: "Formation 100% pratique AutoCAD Civil 3D 2025 (en anglais) : routes, terrassements, réseaux, MNT et profils en long. Le format pas-à-pas avec captures d'écran annotées et fichiers sources rend la progression digeste, même pour les non-anglophones.",
     features: [
       'Création et gestion des MNT',
       'Alignements en plan et profils en long',
@@ -430,7 +430,7 @@ export const products = [
       'Conception des réseaux enterrés (assainissement, AEP)',
       'Production des plans d\'exécution normalisés',
     ],
-    fullDesc: `Formation Civil 3D 2025 — La formation la plus complète pour ingénieurs VRD\n\nMaîtrisez AutoCAD Civil 3D 2025 pour la conception et le calcul des infrastructures routières, terrassements et réseaux.\n\nProgramme :\n- Module 1 : Interface et configuration Civil 3D\n- Module 2 : Création et gestion des MNT\n- Module 3 : Alignements en plan — tracé de routes\n- Module 4 : Profils en long\n- Module 5 : Profils en travers — corridors\n- Module 6 : Calcul automatique des cubatures\n- Module 7 : Conception des réseaux enterrés\n- Module 8 : Rendu et production des plans\n- Module 9 : Projet complet — Route de 5 km de A à Z\n\nVidéos HD téléchargeables, fichiers sources, projets complets, assistance technique et communauté Civil+.`,
+    fullDesc: `Formation Civil 3D 2025 — La formation la plus complète pour ingénieurs VRD\n\nMaîtrisez AutoCAD Civil 3D 2025 pour la conception et le calcul des infrastructures routières, terrassements et réseaux.\n\nLangue de la formation :\nLa formation est dispensée en anglais. Toutefois, le format 100% pratique avec démonstrations pas-à-pas, captures d'écran annotées et fichiers sources inclus rend la progression digeste et compréhensible, même pour les non-anglophones. Le vocabulaire technique utilisé est par ailleurs largement universel (commandes Civil 3D identiques partout dans le monde).\n\nProgramme :\n- Module 1 : Interface et configuration Civil 3D\n- Module 2 : Création et gestion des MNT\n- Module 3 : Alignements en plan — tracé de routes\n- Module 4 : Profils en long\n- Module 5 : Profils en travers — corridors\n- Module 6 : Calcul automatique des cubatures\n- Module 7 : Conception des réseaux enterrés\n- Module 8 : Rendu et production des plans\n- Module 9 : Projet complet — Route de 5 km de A à Z\n\nVidéos HD téléchargeables, fichiers sources, projets complets, assistance technique en français via WhatsApp et communauté Civil+.`,
     faq: faqGeneric('Formation Civil 3D'),
     price: 4999,
     oldPrice: 9999,

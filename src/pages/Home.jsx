@@ -92,24 +92,24 @@ export default function Home() {
             </p>
           </motion.div>
 
-          {/* Search & Filter */}
-          <div className="flex flex-col md:flex-row gap-3 mb-8">
+          {/* Search & Filter — compact heights */}
+          <div className="flex flex-col md:flex-row gap-2 mb-8">
             <div className="relative flex-1">
-              <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder={t('home.searchPlaceholder')}
-                className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-card focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm"
+                className="w-full pl-9 pr-3 h-9 border border-gray-200 rounded-card focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm"
               />
             </div>
-            <div className="flex gap-2 flex-wrap">
+            <div className="flex gap-1.5 flex-wrap">
               {categories.map((cat) => (
                 <button
                   key={cat.id}
                   onClick={() => setSelectedCategory(cat.id)}
-                  className={`px-4 py-2.5 rounded-card text-sm font-medium border transition-all ${
+                  className={`px-3 h-9 rounded-card text-sm font-medium border transition-all ${
                     selectedCategory === cat.id
                       ? 'bg-primary text-white border-primary'
                       : 'bg-white text-gray-600 border-gray-200 hover:border-primary hover:text-primary'
@@ -120,11 +120,11 @@ export default function Home() {
               ))}
             </div>
             <div className="relative">
-              <Filter size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+              <Filter size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
               <select
                 value={selectedPriceRange}
                 onChange={(e) => setSelectedPriceRange(Number(e.target.value))}
-                className="pl-9 pr-8 py-3 border border-gray-200 rounded-card text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-white text-gray-700 cursor-pointer"
+                className="appearance-none pl-8 pr-7 h-9 border border-gray-200 rounded-card text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-white text-gray-700 cursor-pointer"
               >
                 {priceRanges.map((range, i) => (
                   <option key={i} value={i}>{range.label}</option>

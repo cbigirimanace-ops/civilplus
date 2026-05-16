@@ -52,11 +52,16 @@
     }
     </script>
 
-    <!-- Google Fonts: Google Sans (primary) + Inter (fallback) -->
+    <!-- Google Fonts: Google Sans (primary) + Plus Jakarta Sans + Inter (fallbacks) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css?family=Google+Sans:400,500,700,900&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- Preload critical above-the-fold hero assets -->
+    <link rel="preload" as="image" href="/images/mockup-manager.avif" type="image/avif" fetchpriority="high" />
+    <link rel="preload" as="image" href="/images/logo-excel.svg" fetchpriority="high" />
+    <link rel="preload" as="image" href="/images/logo-word.svg" />
 
     <!-- Facebook Pixel -->
     <script>

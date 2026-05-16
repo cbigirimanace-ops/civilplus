@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Users, Clock, ShieldCheck, Filter, ChevronDown } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
-import HeroCarousel from '../components/HeroCarousel';
+import Hero from '../components/Hero';
 import ProductCard from '../components/ProductCard';
 import CountUpNumber from '../components/CountUpNumber';
 import { products, categories } from '../data/products';
@@ -104,7 +104,7 @@ export default function Home() {
         description={t('home.productsSubtitle')}
         url="https://civilplus.work/"
       />
-      <HeroCarousel />
+      <Hero />
 
       {/* Products */}
       <section id="produits" className="py-14 bg-white">

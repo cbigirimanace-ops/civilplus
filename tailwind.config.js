@@ -15,7 +15,8 @@ export default {
         'gray-light': '#F5F5F5',
       },
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
+        sans: ['"Google Sans"', '"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif'],
+        display: ['"Google Sans"', '"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif'],
       },
       borderRadius: {
         'card': '8px',

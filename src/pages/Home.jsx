@@ -88,12 +88,12 @@ export default function Home() {
   const featuredProducts = filtered.filter((p) => FEATURED_SLUGS.includes(p.slug));
   const otherProducts = filtered.filter((p) => !FEATURED_SLUGS.includes(p.slug));
 
-  // Auto-advance featured carousel every 2s
+  // Auto-advance featured carousel every 3s
   useEffect(() => {
     if (featuredProducts.length <= 1) return;
     const id = setInterval(() => {
       setFeaturedIndex((i) => (i + 1) % featuredProducts.length);
-    }, 2000);
+    }, 3000);
     return () => clearInterval(id);
   }, [featuredProducts.length]);
 

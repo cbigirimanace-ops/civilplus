@@ -211,7 +211,7 @@ export default function Home() {
                     <Icon size={30} className="text-white" />
                   </div>
                   <div>
-                    <p className="text-5xl md:text-6xl font-extrabold text-white">
+                    <p className="text-3xl md:text-4xl font-extrabold text-white">
                       <CountUpNumber
                         target={metric.number}
                         prefix={metric.prefix}
@@ -219,7 +219,7 @@ export default function Home() {
                         duration={2000}
                       />
                     </p>
-                    <p className="text-gray-400 mt-2 text-sm leading-relaxed max-w-xs mx-auto">
+                    <p className="text-gray-400 mt-2 text-xs md:text-sm leading-relaxed max-w-xs mx-auto">
                       {metric.label}
                     </p>
                   </div>

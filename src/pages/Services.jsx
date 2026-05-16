@@ -196,7 +196,7 @@ export default function Services() {
         <div className="max-w-5xl mx-auto px-4">
           <div className="flex flex-col md:flex-row rounded-2xl overflow-hidden shadow-xl my-4">
             <div className="flex-1 bg-primary p-10 md:p-12 flex flex-col justify-center">
-              <h2 className="text-white text-3xl md:text-4xl font-extrabold leading-tight mb-5 whitespace-pre-line">
+              <h2 className="text-white text-2xl md:text-3xl font-extrabold leading-tight mb-5 whitespace-pre-line">
                 {t('services.quote')}
               </h2>
               <a
@@ -207,7 +207,7 @@ export default function Services() {
               </a>
             </div>
             <div className="flex-1 bg-white p-10 md:p-12 flex flex-col justify-center items-start md:border-l border-gray-100">
-              <p className="text-5xl md:text-6xl font-extrabold text-primary mb-3">+50 {t('services.clients')}</p>
+              <p className="text-3xl md:text-4xl font-extrabold text-primary mb-3">+50 {t('services.clients')}</p>
               <p className="text-gray-500 text-sm leading-relaxed">
                 {t('services.clientsDesc')}
               </p>

@@ -374,16 +374,16 @@ export default function ProductDetail() {
             {/* CTA buttons — side-by-side when a product has both externalLink + checkoutLink
                 (e.g. Manager Toolkit), stacked otherwise so the right column stays aligned
                 with the left image gallery. */}
-            <div className={`flex gap-2 md:gap-3 ${product.externalLink ? 'flex-col sm:flex-row' : 'flex-col'}`}>
+            <div className={`flex gap-2 ${product.externalLink ? 'flex-col sm:flex-row' : 'flex-col'}`}>
               {product.externalLink && (
                 <a
                   href={product.externalLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 flex items-center justify-center gap-2 border-2 border-primary text-primary rounded-btn py-2 md:py-3 font-bold hover:bg-primary hover:text-white transition-all text-sm md:text-base"
+                  className="flex-1 flex items-center justify-center gap-1.5 border-2 border-primary text-primary rounded-btn py-1.5 md:py-2 font-bold hover:bg-primary hover:text-white transition-all text-xs md:text-sm whitespace-nowrap"
                 >
-                  <ExternalLink size={15} />
-                  {t('product.viewFull')}
+                  <ExternalLink size={13} className="flex-shrink-0" />
+                  <span className="truncate">{t('product.viewFull')}</span>
                 </a>
               )}
               <motion.button
@@ -392,10 +392,16 @@ export default function ProductDetail() {
                 transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
                 whileHover={{ scale: 1.03, y: 0 }}
                 whileTap={{ scale: 0.97 }}
-                className="flex-1 flex items-center justify-center gap-2 bg-primary hover:bg-gray-800 text-white rounded-btn py-2.5 md:py-3.5 font-bold text-sm md:text-base shadow-lg hover:shadow-xl transition-shadow"
+                className={`flex-1 flex items-center justify-center gap-1.5 bg-primary hover:bg-gray-800 text-white rounded-btn font-bold shadow-lg hover:shadow-xl transition-shadow whitespace-nowrap ${
+                  product.externalLink
+                    ? 'py-1.5 md:py-2 text-xs md:text-sm'
+                    : 'py-2.5 md:py-3.5 text-sm md:text-base'
+                }`}
               >
-                {product.externalLink || product.checkoutLink ? <ExternalLink size={16} /> : <ShoppingCart size={16} />}
-                {product.category === 'app' ? t('product.buyApp') : t('product.buy')}
+                {product.externalLink || product.checkoutLink
+                  ? <ExternalLink size={product.externalLink ? 13 : 16} className="flex-shrink-0" />
+                  : <ShoppingCart size={16} className="flex-shrink-0" />}
+                <span className="truncate">{product.category === 'app' ? t('product.buyApp') : t('product.buy')}</span>
               </motion.button>
             </div>
 

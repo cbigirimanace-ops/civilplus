@@ -158,17 +158,43 @@ export default function Hero() {
   const slides = buildSlides(lang);
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [warmedUp, setWarmedUp] = useState(false);
   const containerRef = useRef(null);
   const [mouseTilt, setMouseTilt] = useState({ x: -2, y: 0 });
 
   const slide = slides[index];
 
-  // Auto-rotation
+  // Warm up all hero images upfront so every slide displays at the same
+  // pace (no first-visit delay on the AVIF mockup).
   useEffect(() => {
-    if (paused) return;
+    const sources = [
+      '/images/mockup-manager.avif',
+      '/images/mockup-manager.webp',
+      '/images/mockup-manager.png',
+      '/images/logo-excel.svg',
+      '/images/logo-word.svg',
+    ];
+    let loaded = 0;
+    sources.forEach((src) => {
+      const img = new Image();
+      img.onload = img.onerror = () => {
+        loaded += 1;
+        if (loaded >= sources.length) setWarmedUp(true);
+      };
+      img.src = src;
+    });
+    // Safety: never block the carousel for more than 800ms even if a fetch hangs
+    const safety = setTimeout(() => setWarmedUp(true), 800);
+    return () => clearTimeout(safety);
+  }, []);
+
+  // Auto-rotation (only starts once images are warm so the first cycle
+  // isn't disproportionately long for the heavier mockup slide)
+  useEffect(() => {
+    if (paused || !warmedUp) return;
     const id = setInterval(() => setIndex((i) => (i + 1) % slides.length), ROTATION_MS);
     return () => clearInterval(id);
-  }, [paused, slides.length]);
+  }, [paused, warmedUp, slides.length]);
 
   // Scroll parallax
   const { scrollYProgress } = useScroll({ target: containerRef, offset: ['start start', 'end start'] });

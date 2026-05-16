@@ -17,7 +17,7 @@ const FALLBACK_GRADIENTS = [
   'linear-gradient(135deg,#24243e 0%,#302b63 100%)',
 ];
 
-export default function ProductCard({ product, eager = false }) {
+export default function ProductCard({ product, eager = false, dense = false }) {
   const { convertPrice } = useCurrency();
   const { t } = useI18n();
 
@@ -65,35 +65,42 @@ export default function ProductCard({ product, eager = false }) {
       </div>
 
       {/* Body — extra spacing between description and buttons */}
-      <div className="flex flex-col p-4 flex-1">
-        <h3 className="text-sm font-bold text-primary leading-snug line-clamp-2 mb-3">
+      <div className={`flex flex-col flex-1 ${dense ? 'p-3' : 'p-4'}`}>
+        <h3 className={`font-bold text-primary leading-snug line-clamp-2 ${
+          dense ? 'text-[11px] mb-2' : 'text-sm mb-3'
+        }`}>
           {product.name}
         </h3>
 
-        <div className="flex items-center gap-2 mb-3">
-          <StarRating rating={product.rating} size={14} />
-          <span className="text-xs text-gray-400">({product.reviewCount})</span>
+        <div className={`flex items-center gap-1.5 ${dense ? 'mb-2' : 'mb-3'}`}>
+          <StarRating rating={product.rating} size={dense ? 11 : 14} />
+          <span className={`text-gray-400 ${dense ? 'text-[10px]' : 'text-xs'}`}>({product.reviewCount})</span>
         </div>
 
-        <div className="flex items-baseline gap-2 mb-5 mt-auto">
-          <span className="text-gray-400 line-through text-xs">{displayOldPrice}</span>
-          <span className="text-primary font-extrabold text-lg">{displayPrice}</span>
+        {/* Prices — locked on one line via whitespace-nowrap */}
+        <div className={`flex items-baseline gap-1.5 whitespace-nowrap mt-auto ${dense ? 'mb-3' : 'mb-5'}`}>
+          <span className={`text-gray-400 line-through ${dense ? 'text-[9px]' : 'text-xs'}`}>{displayOldPrice}</span>
+          <span className={`text-primary font-extrabold ${dense ? 'text-sm' : 'text-lg'}`}>{displayPrice}</span>
         </div>
 
-        {/* Buttons — always visible, more breathing space above */}
-        <div className="flex gap-2 pt-2 border-t border-gray-100">
+        {/* Buttons */}
+        <div className={`flex gap-1.5 pt-2 border-t border-gray-100 ${dense ? '' : 'gap-2'}`}>
           <Link
             to={`/produits/${product.slug}`}
-            className="flex-1 flex items-center justify-center gap-1.5 border border-gray-300 text-primary rounded-btn py-2 text-xs font-semibold hover:border-primary hover:bg-gray-50 transition-all mt-2"
+            className={`flex-1 flex items-center justify-center gap-1 border border-gray-300 text-primary rounded-btn font-semibold hover:border-primary hover:bg-gray-50 transition-all mt-2 ${
+              dense ? 'py-1.5 text-[10px]' : 'py-2 text-xs'
+            }`}
           >
-            <Eye size={14} />
-            {t('product.viewProduct')}
+            <Eye size={dense ? 11 : 14} />
+            {dense ? 'Voir' : t('product.viewProduct')}
           </Link>
           <button
             onClick={handleBuy}
-            className="flex-1 flex items-center justify-center gap-1.5 bg-primary text-white rounded-btn py-2 text-xs font-semibold hover:bg-gray-800 transition-all mt-2"
+            className={`flex-1 flex items-center justify-center gap-1 bg-primary text-white rounded-btn font-semibold hover:bg-gray-800 transition-all mt-2 ${
+              dense ? 'py-1.5 text-[10px]' : 'py-2 text-xs'
+            }`}
           >
-            {product.externalLink || product.checkoutLink ? <ExternalLink size={14} /> : <ShoppingCart size={14} />}
+            {product.externalLink || product.checkoutLink ? <ExternalLink size={dense ? 11 : 14} /> : <ShoppingCart size={dense ? 11 : 14} />}
             {t('product.buyShort')}
           </button>
         </div>

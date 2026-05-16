@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Search, ChevronLeft, ChevronRight, Users, Clock, ShieldCheck, Filter } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Search, Users, Clock, ShieldCheck, Filter } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import HeroCarousel from '../components/HeroCarousel';
 import ProductCard from '../components/ProductCard';
@@ -37,8 +37,11 @@ export default function Home() {
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedPriceRange, setSelectedPriceRange] = useState(0);
-  const [mobileIndex, setMobileIndex] = useState(0);
+  const [featuredIndex, setFeaturedIndex] = useState(0);
   const location = useLocation();
+
+  // Featured product slugs (the 4 highlighted on mobile)
+  const FEATURED_SLUGS = ['manager-toolkit', 'pack-bureaux-etudes', 'template-gantt', 'pack-controle-qualite'];
   // unused vars retained for tooling
   // eslint-disable-next-line no-unused-vars
   const _t = t;
@@ -66,7 +69,20 @@ export default function Home() {
     return matchSearch && matchCategory && matchPrice;
   });
 
-  useEffect(() => { setMobileIndex(0); }, [search, selectedCategory, selectedPriceRange]);
+  useEffect(() => { setFeaturedIndex(0); }, [search, selectedCategory, selectedPriceRange]);
+
+  // Split filtered products into featured + others (mobile two-section layout)
+  const featuredProducts = filtered.filter((p) => FEATURED_SLUGS.includes(p.slug));
+  const otherProducts = filtered.filter((p) => !FEATURED_SLUGS.includes(p.slug));
+
+  // Auto-advance featured carousel every 2s
+  useEffect(() => {
+    if (featuredProducts.length <= 1) return;
+    const id = setInterval(() => {
+      setFeaturedIndex((i) => (i + 1) % featuredProducts.length);
+    }, 2000);
+    return () => clearInterval(id);
+  }, [featuredProducts.length]);
 
   return (
     <div>
@@ -141,43 +157,82 @@ export default function Home() {
             </div>
           ) : (
             <>
+              {/* Desktop / Tablet: grid */}
               <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                 {filtered.map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}
               </div>
 
-              {/* Mobile: single carousel */}
-              <div className="md:hidden">
-                <motion.div
-                  key={mobileIndex}
-                  initial={{ opacity: 0, x: 30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.25 }}
-                >
-                  <ProductCard product={filtered[mobileIndex]} />
-                </motion.div>
-                <div className="flex items-center justify-between mt-4 px-2">
-                  <button
-                    onClick={() => setMobileIndex((i) => Math.max(0, i - 1))}
-                    disabled={mobileIndex === 0}
-                    className="p-2 rounded-full border border-gray-200 disabled:opacity-30 hover:bg-gray-100 transition"
-                    aria-label="Précédent"
-                  >
-                    <ChevronLeft size={20} />
-                  </button>
-                  <span className="text-sm text-gray-500">
-                    {mobileIndex + 1} / {filtered.length}
-                  </span>
-                  <button
-                    onClick={() => setMobileIndex((i) => Math.min(filtered.length - 1, i + 1))}
-                    disabled={mobileIndex === filtered.length - 1}
-                    className="p-2 rounded-full border border-gray-200 disabled:opacity-30 hover:bg-gray-100 transition"
-                    aria-label="Suivant"
-                  >
-                    <ChevronRight size={20} />
-                  </button>
-                </div>
+              {/* MOBILE: featured auto-carousel + 2-col grid for the rest */}
+              <div className="md:hidden space-y-8">
+                {featuredProducts.length >= 2 && (
+                  <section>
+                    <div className="flex items-center justify-between mb-3 px-1">
+                      <h3 className="text-xs font-bold uppercase tracking-wider text-gray-500">
+                        Produits phares
+                      </h3>
+                      <span className="text-[10px] text-gray-400">
+                        {featuredIndex + 1} / {featuredProducts.length}
+                      </span>
+                    </div>
+                    <div className="relative overflow-hidden">
+                      <AnimatePresence mode="wait">
+                        <motion.div
+                          key={featuredProducts[featuredIndex]?.id}
+                          initial={{ opacity: 0, x: 40 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: -40 }}
+                          transition={{ duration: 0.4, ease: 'easeInOut' }}
+                        >
+                          <ProductCard product={featuredProducts[featuredIndex]} eager />
+                        </motion.div>
+                      </AnimatePresence>
+                    </div>
+                    {/* Dots */}
+                    <div className="flex justify-center gap-1.5 mt-3">
+                      {featuredProducts.map((_, i) => (
+                        <button
+                          key={i}
+                          onClick={() => setFeaturedIndex(i)}
+                          className={`h-1.5 rounded-full transition-all ${
+                            i === featuredIndex ? 'w-6 bg-primary' : 'w-1.5 bg-gray-300 hover:bg-gray-400'
+                          }`}
+                          aria-label={`Slide ${i + 1}`}
+                        />
+                      ))}
+                    </div>
+                  </section>
+                )}
+
+                {otherProducts.length > 0 && (
+                  <section>
+                    {featuredProducts.length >= 2 && (
+                      <h3 className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3 px-1">
+                        Autres produits
+                      </h3>
+                    )}
+                    <motion.div
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.4, ease: 'easeOut' }}
+                      className="grid grid-cols-2 gap-3"
+                    >
+                      {otherProducts.map((product) => (
+                        <ProductCard key={product.id} product={product} dense />
+                      ))}
+                    </motion.div>
+                  </section>
+                )}
+
+                {/* Fallback: if filtering left no featured products, render all in 2-col */}
+                {featuredProducts.length < 2 && otherProducts.length === 0 && filtered.length > 0 && (
+                  <div className="grid grid-cols-2 gap-3">
+                    {filtered.map((product) => (
+                      <ProductCard key={product.id} product={product} dense />
+                    ))}
+                  </div>
+                )}
               </div>
             </>
           )}

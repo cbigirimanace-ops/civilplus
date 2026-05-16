@@ -302,7 +302,7 @@ export default function ProductDetail() {
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
-            className="flex flex-col gap-3 md:gap-3"
+            className="flex flex-col gap-3 md:gap-5"
             id="acheter"
             ref={buyZoneRef}
           >
@@ -324,13 +324,13 @@ export default function ProductDetail() {
             </div>
 
             {/* Title */}
-            <h1 className="text-lg md:text-xl font-extrabold text-primary leading-tight">
+            <h1 className="text-lg md:text-2xl font-extrabold text-primary leading-tight">
               {product.name}
             </h1>
 
             {/* Banner — below title, above stars */}
             {product.banner && (
-              <ProductBanner slug={product.slug} alt={product.name} />
+              <ProductBanner src={product.banner} slug={product.slug} alt={product.name} />
             )}
 
             {/* Stars */}
@@ -372,13 +372,13 @@ export default function ProductDetail() {
             </p>
 
             {/* CTA buttons — smaller height + font */}
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 md:gap-3">
               {product.externalLink && (
                 <a
                   href={product.externalLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 border-2 border-primary text-primary rounded-btn py-2 font-bold hover:bg-primary hover:text-white transition-all text-sm"
+                  className="flex items-center justify-center gap-2 border-2 border-primary text-primary rounded-btn py-2 md:py-3 font-bold hover:bg-primary hover:text-white transition-all text-sm md:text-base"
                 >
                   <ExternalLink size={15} />
                   {t('product.viewFull')}
@@ -386,7 +386,7 @@ export default function ProductDetail() {
               )}
               <button
                 onClick={handleBuy}
-                className="flex items-center justify-center gap-2 bg-primary hover:bg-gray-800 text-white rounded-btn py-2.5 font-bold text-sm md:text-base shadow-lg hover:scale-[1.02] transition-all"
+                className="flex items-center justify-center gap-2 bg-primary hover:bg-gray-800 text-white rounded-btn py-2.5 md:py-3.5 font-bold text-sm md:text-base shadow-lg hover:scale-[1.02] transition-all"
               >
                 {product.externalLink || product.checkoutLink ? <ExternalLink size={16} /> : <ShoppingCart size={16} />}
                 {t('product.buy')}
@@ -394,8 +394,8 @@ export default function ProductDetail() {
             </div>
 
             {/* Payment methods — centered relative to button */}
-            <div className="flex flex-col items-center gap-1.5">
-              <p className="text-[11px] text-gray-500">{t('product.paymentMethods')}</p>
+            <div className="flex flex-col items-center gap-1.5 md:gap-2 md:pt-2">
+              <p className="text-[11px] md:text-xs text-gray-500">{t('product.paymentMethods')}</p>
               <PaymentIcons />
             </div>
           </motion.div>

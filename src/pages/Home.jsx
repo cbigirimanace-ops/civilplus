@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Users, Clock, ShieldCheck, Filter } from 'lucide-react';
+import { Search, Users, Clock, ShieldCheck, Filter, ChevronDown } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import HeroCarousel from '../components/HeroCarousel';
 import ProductCard from '../components/ProductCard';
@@ -38,7 +38,20 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedPriceRange, setSelectedPriceRange] = useState(0);
   const [featuredIndex, setFeaturedIndex] = useState(0);
+  const [mobileTypeOpen, setMobileTypeOpen] = useState(false);
+  const typeRef = useRef(null);
   const location = useLocation();
+
+  // Close mobile type dropdown on outside click
+  useEffect(() => {
+    const handler = (e) => {
+      if (typeRef.current && !typeRef.current.contains(e.target)) {
+        setMobileTypeOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
 
   // Featured product slugs (the 4 highlighted on mobile)
   const FEATURED_SLUGS = ['manager-toolkit', 'pack-bureaux-etudes', 'template-gantt', 'pack-controle-qualite'];
@@ -109,8 +122,9 @@ export default function Home() {
           </motion.div>
 
           {/* Search & Filter — compact heights */}
-          <div className="flex flex-col md:flex-row gap-2 mb-8">
-            <div className="relative flex-1">
+          <div className="mb-8 space-y-2 md:space-y-0 md:flex md:flex-row md:gap-2">
+            {/* Search input */}
+            <div className="relative md:flex-1">
               <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
@@ -120,7 +134,77 @@ export default function Home() {
                 className="w-full pl-9 pr-3 h-9 border border-gray-200 rounded-card focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm"
               />
             </div>
-            <div className="flex gap-1.5 flex-wrap">
+
+            {/* MOBILE: Tous + Par type + Tous les prix on a single line */}
+            <div className="md:hidden flex gap-1.5">
+              <button
+                onClick={() => setSelectedCategory('all')}
+                className={`flex-1 h-9 rounded-card text-xs font-medium border transition-all ${
+                  selectedCategory === 'all'
+                    ? 'bg-primary text-white border-primary'
+                    : 'bg-white text-gray-600 border-gray-200'
+                }`}
+              >
+                {categoryLabels.all}
+              </button>
+
+              <div ref={typeRef} className="relative flex-1">
+                <button
+                  onClick={() => setMobileTypeOpen((o) => !o)}
+                  className={`w-full h-9 px-3 rounded-card text-xs font-medium border transition-all flex items-center justify-center gap-1 ${
+                    selectedCategory !== 'all'
+                      ? 'bg-primary text-white border-primary'
+                      : 'bg-white text-gray-600 border-gray-200'
+                  }`}
+                >
+                  <span className="truncate">
+                    {selectedCategory === 'all' ? 'Par type' : (categoryLabels[selectedCategory] || selectedCategory)}
+                  </span>
+                  <ChevronDown size={12} className={`flex-shrink-0 transition-transform ${mobileTypeOpen ? 'rotate-180' : ''}`} />
+                </button>
+                <AnimatePresence>
+                  {mobileTypeOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -6 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute top-full left-0 right-0 mt-1.5 bg-white rounded-card shadow-xl border border-gray-100 z-30 overflow-hidden"
+                    >
+                      {categories.filter((c) => c.id !== 'all').map((cat) => (
+                        <button
+                          key={cat.id}
+                          onClick={() => { setSelectedCategory(cat.id); setMobileTypeOpen(false); }}
+                          className={`w-full text-left px-3 py-2.5 text-xs transition ${
+                            selectedCategory === cat.id
+                              ? 'bg-primary/10 text-primary font-semibold'
+                              : 'text-gray-700 hover:bg-gray-50'
+                          }`}
+                        >
+                          {categoryLabels[cat.id] || cat.name}
+                        </button>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              <div className="relative flex-1">
+                <Filter size={12} className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                <select
+                  value={selectedPriceRange}
+                  onChange={(e) => setSelectedPriceRange(Number(e.target.value))}
+                  className="appearance-none w-full pl-6 pr-6 h-9 border border-gray-200 rounded-card text-xs focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-white text-gray-700 cursor-pointer truncate"
+                >
+                  {priceRanges.map((range, i) => (
+                    <option key={i} value={i}>{range.label}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {/* DESKTOP: all category buttons + price select inline */}
+            <div className="hidden md:flex gap-1.5 flex-wrap">
               {categories.map((cat) => (
                 <button
                   key={cat.id}
@@ -135,7 +219,7 @@ export default function Home() {
                 </button>
               ))}
             </div>
-            <div className="relative">
+            <div className="hidden md:block relative">
               <Filter size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
               <select
                 value={selectedPriceRange}

@@ -55,6 +55,7 @@ export const fr = {
   },
   product: {
     buy: 'Télécharger maintenant',
+    buyApp: 'Obtenez votre logiciel',
     buyShort: 'Acheter',
     viewProduct: 'Voir le produit',
     viewFull: 'Voir la description complète du produit',
@@ -207,6 +208,7 @@ export const en = {
   },
   product: {
     buy: 'Download now',
+    buyApp: 'Get the software',
     buyShort: 'Buy',
     viewProduct: 'View product',
     viewFull: 'View full product description',

@@ -371,26 +371,32 @@ export default function ProductDetail() {
               {product.shortDesc}
             </p>
 
-            {/* CTA buttons — smaller height + font */}
-            <div className="flex flex-col gap-2 md:gap-3">
+            {/* CTA buttons — side-by-side when a product has both externalLink + checkoutLink
+                (e.g. Manager Toolkit), stacked otherwise so the right column stays aligned
+                with the left image gallery. */}
+            <div className={`flex gap-2 md:gap-3 ${product.externalLink ? 'flex-col sm:flex-row' : 'flex-col'}`}>
               {product.externalLink && (
                 <a
                   href={product.externalLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 border-2 border-primary text-primary rounded-btn py-2 md:py-3 font-bold hover:bg-primary hover:text-white transition-all text-sm md:text-base"
+                  className="flex-1 flex items-center justify-center gap-2 border-2 border-primary text-primary rounded-btn py-2 md:py-3 font-bold hover:bg-primary hover:text-white transition-all text-sm md:text-base"
                 >
                   <ExternalLink size={15} />
                   {t('product.viewFull')}
                 </a>
               )}
-              <button
+              <motion.button
                 onClick={handleBuy}
-                className="flex items-center justify-center gap-2 bg-primary hover:bg-gray-800 text-white rounded-btn py-2.5 md:py-3.5 font-bold text-sm md:text-base shadow-lg hover:scale-[1.02] transition-all"
+                animate={{ y: [0, -4, 0] }}
+                transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
+                whileHover={{ scale: 1.03, y: 0 }}
+                whileTap={{ scale: 0.97 }}
+                className="flex-1 flex items-center justify-center gap-2 bg-primary hover:bg-gray-800 text-white rounded-btn py-2.5 md:py-3.5 font-bold text-sm md:text-base shadow-lg hover:shadow-xl transition-shadow"
               >
                 {product.externalLink || product.checkoutLink ? <ExternalLink size={16} /> : <ShoppingCart size={16} />}
-                {t('product.buy')}
-              </button>
+                {product.category === 'app' ? t('product.buyApp') : t('product.buy')}
+              </motion.button>
             </div>
 
             {/* Payment methods — centered relative to button */}

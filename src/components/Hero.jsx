@@ -408,7 +408,6 @@ export default function Hero() {
         </div>
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-b from-transparent to-white pointer-events-none" />
     </section>
   );
 }

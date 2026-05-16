@@ -1,4 +1,4 @@
-import { Shield, RefreshCcw, Headphones, Zap } from 'lucide-react';
+import { Shield, Headphones, Zap } from 'lucide-react';
 import { useI18n } from '../i18n/I18nContext';
 
 export default function TrustBadges({ variant = 'grid' }) {
@@ -6,14 +6,13 @@ export default function TrustBadges({ variant = 'grid' }) {
 
   const items = [
     { icon: Shield, title: t('trust.secureCheckout'), desc: t('trust.secureDesc') },
-    { icon: RefreshCcw, title: t('trust.refund'), desc: t('trust.refundDesc') },
     { icon: Headphones, title: t('trust.support'), desc: t('trust.supportDesc') },
     { icon: Zap, title: t('trust.delivery'), desc: t('trust.deliveryDesc') },
   ];
 
   if (variant === 'compact') {
     return (
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+      <div className="grid grid-cols-3 gap-2">
         {items.map(({ icon: Icon, title }) => (
           <div key={title} className="flex flex-col items-center gap-1 text-center bg-gray-50 rounded-card p-3">
             <Icon size={18} className="text-primary" />
@@ -25,7 +24,7 @@ export default function TrustBadges({ variant = 'grid' }) {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
       {items.map(({ icon: Icon, title, desc }) => (
         <div
           key={title}

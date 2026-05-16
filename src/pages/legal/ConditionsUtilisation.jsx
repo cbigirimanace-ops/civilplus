@@ -44,11 +44,18 @@ export default function ConditionsUtilisation() {
           </p>
         </section>
         <section>
-          <h2 className="font-bold text-primary text-lg mt-6 mb-2">5. Garantie satisfait ou remboursé</h2>
+          <h2 className="font-bold text-primary text-lg mt-6 mb-2">5. Caractère définitif des ventes</h2>
           <p>
-            Conformément à notre engagement, vous disposez d'un délai de <strong>14 jours</strong> à
-            compter de l'achat pour demander un remboursement, sans avoir à justifier votre décision.
-            La demande s'effectue par email à ingenierie@civilplus.work.
+            Les produits proposés étant des biens numériques livrés instantanément
+            (téléchargement immédiat ou accès en ligne après paiement), <strong>les ventes sont
+            définitives et aucun remboursement n'est possible</strong> une fois la commande
+            validée et l'accès au produit délivré.
+          </p>
+          <p>
+            Avant tout achat, nous vous invitons à consulter attentivement la description du
+            produit, à visionner la vidéo de présentation lorsqu'elle est disponible, et à nous
+            contacter via WhatsApp ou email pour toute question. Notre équipe se tient à votre
+            disposition pour vous aider à choisir le produit adapté à vos besoins.
           </p>
         </section>
         <section>
@@ -123,11 +130,17 @@ export default function ConditionsUtilisation() {
           </p>
         </section>
         <section>
-          <h2 className="font-bold text-primary text-lg mt-6 mb-2">5. Money-back guarantee</h2>
+          <h2 className="font-bold text-primary text-lg mt-6 mb-2">5. Sales are final</h2>
           <p>
-            In line with our commitment, you have <strong>14 days</strong> from the date of
-            purchase to request a refund, with no need to justify your decision. Requests should be
-            sent by email to ingenierie@civilplus.work.
+            As the products are digital goods delivered instantly (immediate download or online
+            access after payment), <strong>all sales are final and no refunds are possible</strong>
+            once the order has been validated and access to the product has been granted.
+          </p>
+          <p>
+            Before any purchase, we invite you to carefully review the product description, watch
+            the presentation video when available, and reach out to us via WhatsApp or email with
+            any question. Our team is available to help you choose the product that best matches
+            your needs.
           </p>
         </section>
         <section>

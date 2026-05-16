@@ -121,8 +121,6 @@ export const fr = {
   trust: {
     secureCheckout: 'Paiement 100% sécurisé',
     secureDesc: 'Transactions chiffrées via fournisseurs certifiés',
-    refund: 'Garantie satisfait ou remboursé',
-    refundDesc: '14 jours pour changer d\'avis sans justification',
     support: 'Support 7j/7',
     supportDesc: 'Réponse rapide par WhatsApp et email',
     delivery: 'Livraison instantanée',
@@ -263,8 +261,6 @@ export const en = {
   trust: {
     secureCheckout: '100% secure payment',
     secureDesc: 'Encrypted transactions via certified providers',
-    refund: 'Money-back guarantee',
-    refundDesc: '14 days to change your mind, no questions asked',
     support: '7-day support',
     supportDesc: 'Fast reply via WhatsApp and email',
     delivery: 'Instant delivery',

@@ -52,14 +52,12 @@ const faqGeneric = (productLabel) => [
   { q: 'Comment recevoir le produit après paiement ?', a: `Après validation du paiement, vous recevez un email immédiat avec un lien de téléchargement du ${productLabel}. L'accès est également disponible depuis votre espace de commande.` },
   { q: "Le produit est-il personnalisable ?", a: "Oui, tous les fichiers Excel et documents sont 100% déverrouillés. Vous pouvez modifier les formules, ajouter votre logo, vos données et adapter l'outil à votre projet." },
   { q: 'Quels sont les moyens de paiement acceptés ?', a: 'Nous acceptons Visa, Mastercard, Orange Money, MTN Mobile Money, Wave et Moov Money. Les paiements sont 100% sécurisés via notre prestataire certifié.' },
-  { q: 'Puis-je obtenir un remboursement ?', a: 'Oui. Vous disposez de 14 jours après l\'achat pour demander un remboursement sans avoir à vous justifier. Contactez-nous par WhatsApp ou email.' },
   { q: 'Comment contacter le support ?', a: 'Le support est disponible 7j/7 par WhatsApp au +237 650 000 749 et par email à ingenierie@civilplus.work. Temps de réponse moyen : 12h.' },
 ];
 const faqGenericEn = (productLabel) => [
   { q: 'How will I receive the product after payment?', a: `After payment confirmation, you instantly receive an email with a download link for the ${productLabel}. Access is also available from your order area.` },
   { q: 'Can I customize the product?', a: 'Yes — all Excel files and documents are 100% unlocked. You can edit formulas, add your logo and tailor the tool to your project.' },
   { q: 'What payment methods are accepted?', a: 'We accept Visa, Mastercard, Orange Money, MTN Mobile Money, Wave and Moov Money. Payments are 100% secure via our certified provider.' },
-  { q: 'Can I get a refund?', a: 'Yes. You have 14 days after purchase to request a refund, no questions asked. Contact us by WhatsApp or email.' },
   { q: 'How do I contact support?', a: 'Support is available 7 days a week via WhatsApp at +237 650 000 749 and email at ingenierie@civilplus.work. Average response time: 12 hours.' },
 ];
 

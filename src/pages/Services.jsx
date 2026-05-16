@@ -6,10 +6,7 @@ import { useI18n } from '../i18n/I18nContext';
 import SeoMeta from '../components/SeoMeta';
 
 // All 23 project photos from "Images projets réalisée"
-const galleryImages = [
-  ...Array.from({ length: 16 }, (_, i) => `/images/gallery/gallery-${i + 1}.png`),
-  ...Array.from({ length: 7 }, (_, i) => `/images/gallery/gallery-${i + 17}.jpg`),
-];
+const galleryImages = Array.from({ length: 23 }, (_, i) => `/images/gallery/gallery-${i + 1}.webp`);
 
 export default function Services() {
   const { t, lang } = useI18n();
@@ -22,7 +19,7 @@ export default function Services() {
       description: t('services.metalDesc'),
       icon: Wrench,
       dotColor: 'bg-primary',
-      image: '/images/construction-metallique.jpg',
+      image: '/images/construction-metallique.webp',
     },
     {
       id: 2,
@@ -30,7 +27,7 @@ export default function Services() {
       description: t('services.buildingDesc'),
       icon: Building2,
       dotColor: 'bg-gray-400',
-      image: '/images/projet-batiment.jpg',
+      image: '/images/projet-batiment.webp',
     },
   ];
 
@@ -60,7 +57,7 @@ export default function Services() {
       <div className="relative h-80 md:h-[460px] flex items-center overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('/images/hero-bg.jpg')" }}
+          style={{ backgroundImage: "url('/images/hero-bg.webp')" }}
         />
         <div className="absolute inset-0 bg-black/60" />
         <div className="relative z-10 max-w-5xl mx-auto px-4 md:px-6 text-white w-full">

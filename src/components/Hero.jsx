@@ -102,8 +102,9 @@ function buildSlides(lang) {
 function MockupVisual({ slide }) {
   if (slide.kind === 'logo') {
     return (
-      <div className="relative w-full aspect-[4/5] md:aspect-square flex items-center justify-center">
-        {/* Backdrop card */}
+      // Aspect locked to the mockup's natural ratio (~16:10) on mobile so all slides
+      // occupy the same vertical space, then natural on md+.
+      <div className="relative w-full aspect-[16/10] md:aspect-square flex items-center justify-center">
         <div
           className="absolute inset-4 md:inset-8 rounded-3xl"
           style={{
@@ -112,7 +113,6 @@ function MockupVisual({ slide }) {
             border: '1px solid rgba(255,255,255,0.08)',
           }}
         />
-        {/* Glow */}
         <div
           aria-hidden="true"
           className="absolute inset-0 pointer-events-none"
@@ -121,32 +121,33 @@ function MockupVisual({ slide }) {
             filter: 'blur(40px)',
           }}
         />
-        {/* Logo */}
         <img
           src={slide.logo}
           alt={slide.alt}
-          className="relative w-48 md:w-64 lg:w-72 h-auto drop-shadow-2xl"
+          className="relative w-32 sm:w-40 md:w-64 lg:w-72 h-auto drop-shadow-2xl"
           loading="eager"
           decoding="async"
         />
       </div>
     );
   }
-  // 'mockup' (Manager Toolkit)
+  // 'mockup' (Manager Toolkit) — wrap in same aspect on mobile, natural on md+
   return (
-    <picture>
-      <source srcSet={slide.avif} type="image/avif" />
-      <source srcSet={slide.webp} type="image/webp" />
-      <img
-        src={slide.png}
-        alt={slide.alt}
-        loading="eager"
-        fetchpriority="high"
-        decoding="async"
-        className="w-full h-auto"
-        style={{ filter: 'drop-shadow(0 30px 60px rgba(0,0,0,0.5))' }}
-      />
-    </picture>
+    <div className="relative w-full aspect-[16/10] md:aspect-auto flex items-center justify-center">
+      <picture>
+        <source srcSet={slide.avif} type="image/avif" />
+        <source srcSet={slide.webp} type="image/webp" />
+        <img
+          src={slide.png}
+          alt={slide.alt}
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+          className="w-full h-full md:h-auto object-contain"
+          style={{ filter: 'drop-shadow(0 30px 60px rgba(0,0,0,0.5))' }}
+        />
+      </picture>
+    </div>
   );
 }
 

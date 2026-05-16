@@ -10,8 +10,8 @@ export default function ProductBanner({ src, slug, alt }) {
   const [hide, setHide] = useState(false);
   if (hide) return null;
 
-  // Fallback: try /images/banners/{slug}.jpg first, then .png
-  const url = src || (slug ? `/images/banners/${slug}.jpg` : null);
+  // Fallback when no explicit src: try /images/banners/{slug}.webp
+  const url = src || (slug ? `/images/banners/${slug}.webp` : null);
   if (!url) return null;
 
   return (

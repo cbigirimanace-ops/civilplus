@@ -39,11 +39,11 @@ function PaymentIcons() {
       </div>
       {/* Orange Money */}
       <div className={card} title="Orange Money">
-        <img src="/images/payment/orange.png" alt="Orange Money" className="h-5 w-auto object-contain" loading="lazy" />
+        <img src="/images/payment/orange.webp" alt="Orange Money" className="h-5 w-auto object-contain" loading="lazy" />
       </div>
       {/* MTN MoMo */}
       <div className={card} title="MTN Mobile Money">
-        <img src="/images/payment/mtn.jpg" alt="MTN MoMo" className="h-5 w-auto object-contain" loading="lazy" />
+        <img src="/images/payment/mtn.webp" alt="MTN MoMo" className="h-5 w-auto object-contain" loading="lazy" />
       </div>
       {/* Wave */}
       <div className={card} title="Wave">

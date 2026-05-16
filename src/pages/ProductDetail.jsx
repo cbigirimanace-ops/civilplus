@@ -21,40 +21,40 @@ import { trackProductView, trackInitiateCheckout } from '../utils/analytics';
 
 // ─── Payment method icons (real logos on white background) ──────────────────
 function PaymentIcons() {
-  const card = "border border-gray-200 rounded-md bg-white h-9 px-2 flex items-center justify-center";
+  const card = "border border-gray-200 rounded bg-white h-7 px-1.5 flex items-center justify-center shrink-0";
   return (
-    <div className="flex flex-wrap items-center justify-center gap-2">
+    <div className="flex flex-nowrap items-center justify-center gap-1.5 max-w-full">
       {/* Visa */}
       <div className={card} title="Visa">
-        <svg viewBox="0 0 48 16" className="h-4 w-auto" aria-label="Visa">
+        <svg viewBox="0 0 48 16" className="h-3 w-auto" aria-label="Visa">
           <text x="0" y="13" fontFamily="Arial" fontWeight="900" fontSize="14" fill="#1A1F71">VISA</text>
         </svg>
       </div>
       {/* Mastercard */}
       <div className={card} title="Mastercard">
-        <svg viewBox="0 0 38 24" className="h-5 w-auto">
+        <svg viewBox="0 0 38 24" className="h-4 w-auto">
           <circle cx="15" cy="12" r="10" fill="#EB001B" />
           <circle cx="23" cy="12" r="10" fill="#F79E1B" fillOpacity="0.85" />
         </svg>
       </div>
-      {/* Orange Money — real logo */}
+      {/* Orange Money */}
       <div className={card} title="Orange Money">
-        <img src="/images/payment/orange.png" alt="Orange Money" className="h-6 w-auto object-contain" loading="lazy" />
+        <img src="/images/payment/orange.png" alt="Orange Money" className="h-5 w-auto object-contain" loading="lazy" />
       </div>
-      {/* MTN Mobile Money — real logo */}
+      {/* MTN MoMo */}
       <div className={card} title="MTN Mobile Money">
-        <img src="/images/payment/mtn.jpg" alt="MTN MoMo" className="h-6 w-auto object-contain" loading="lazy" />
+        <img src="/images/payment/mtn.jpg" alt="MTN MoMo" className="h-5 w-auto object-contain" loading="lazy" />
       </div>
       {/* Wave */}
       <div className={card} title="Wave">
-        <svg viewBox="0 0 60 24" className="h-5 w-auto">
+        <svg viewBox="0 0 60 24" className="h-4 w-auto">
           <rect width="60" height="24" rx="4" fill="#1DC1EB" />
           <text x="11" y="17" fontFamily="Arial" fontWeight="bold" fontSize="13" fill="#fff">Wave</text>
         </svg>
       </div>
-      {/* Moov Money — fixed truncation (wider viewBox, smaller font) */}
+      {/* Moov Money */}
       <div className={card} title="Moov Money">
-        <svg viewBox="0 0 70 24" className="h-5 w-auto">
+        <svg viewBox="0 0 70 24" className="h-4 w-auto">
           <rect width="70" height="24" rx="4" fill="#0055A5" />
           <text x="6" y="17" fontFamily="Arial" fontWeight="bold" fontSize="11" fill="#fff">Moov Money</text>
         </svg>
@@ -366,8 +366,8 @@ export default function ProductDetail() {
               />
             )}
 
-            {/* ── Generous spacing between countdown and short desc ── */}
-            <div className="h-2 md:h-4" />
+            {/* ── Light spacing between countdown and short desc ── */}
+            <div className="h-1 md:h-1.5" />
 
             {/* Short desc */}
             <p className="text-gray-600 text-sm leading-relaxed border-l-4 border-gray-200 pl-3">

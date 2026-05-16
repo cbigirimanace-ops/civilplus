@@ -44,22 +44,7 @@ export default function ConditionsUtilisation() {
           </p>
         </section>
         <section>
-          <h2 className="font-bold text-primary text-lg mt-6 mb-2">5. Caractère définitif des ventes</h2>
-          <p>
-            Les produits proposés étant des biens numériques livrés instantanément
-            (téléchargement immédiat ou accès en ligne après paiement), <strong>les ventes sont
-            définitives et aucun remboursement n'est possible</strong> une fois la commande
-            validée et l'accès au produit délivré.
-          </p>
-          <p>
-            Avant tout achat, nous vous invitons à consulter attentivement la description du
-            produit, à visionner la vidéo de présentation lorsqu'elle est disponible, et à nous
-            contacter via WhatsApp ou email pour toute question. Notre équipe se tient à votre
-            disposition pour vous aider à choisir le produit adapté à vos besoins.
-          </p>
-        </section>
-        <section>
-          <h2 className="font-bold text-primary text-lg mt-6 mb-2">6. Licence d'utilisation</h2>
+          <h2 className="font-bold text-primary text-lg mt-6 mb-2">5. Licence d'utilisation</h2>
           <p>
             L'achat d'un produit donne droit à une licence d'utilisation personnelle, non
             transférable et non exclusive. La revente, le partage ou la distribution des fichiers à
@@ -67,14 +52,14 @@ export default function ConditionsUtilisation() {
           </p>
         </section>
         <section>
-          <h2 className="font-bold text-primary text-lg mt-6 mb-2">7. Support</h2>
+          <h2 className="font-bold text-primary text-lg mt-6 mb-2">6. Support</h2>
           <p>
             Le support client est disponible 7j/7 par email à ingenierie@civilplus.work et par
             WhatsApp au +237 650 000 749. Le temps de réponse moyen est de 12 heures.
           </p>
         </section>
         <section>
-          <h2 className="font-bold text-primary text-lg mt-6 mb-2">8. Responsabilité</h2>
+          <h2 className="font-bold text-primary text-lg mt-6 mb-2">7. Responsabilité</h2>
           <p>
             Les fichiers de calcul et outils proposés sont des aides à la conception destinées à des
             ingénieurs qualifiés. Civil+ ne saurait être tenu responsable des conséquences d'un
@@ -83,7 +68,7 @@ export default function ConditionsUtilisation() {
           </p>
         </section>
         <section>
-          <h2 className="font-bold text-primary text-lg mt-6 mb-2">9. Droit applicable</h2>
+          <h2 className="font-bold text-primary text-lg mt-6 mb-2">8. Droit applicable</h2>
           <p>
             Les présentes CGUV sont soumises au droit camerounais. Tout litige sera de la compétence
             exclusive des tribunaux de Yaoundé.
@@ -130,35 +115,21 @@ export default function ConditionsUtilisation() {
           </p>
         </section>
         <section>
-          <h2 className="font-bold text-primary text-lg mt-6 mb-2">5. Sales are final</h2>
-          <p>
-            As the products are digital goods delivered instantly (immediate download or online
-            access after payment), <strong>all sales are final and no refunds are possible</strong>
-            once the order has been validated and access to the product has been granted.
-          </p>
-          <p>
-            Before any purchase, we invite you to carefully review the product description, watch
-            the presentation video when available, and reach out to us via WhatsApp or email with
-            any question. Our team is available to help you choose the product that best matches
-            your needs.
-          </p>
-        </section>
-        <section>
-          <h2 className="font-bold text-primary text-lg mt-6 mb-2">6. License of use</h2>
+          <h2 className="font-bold text-primary text-lg mt-6 mb-2">5. License of use</h2>
           <p>
             Purchase of a product grants a personal, non-transferable, non-exclusive license of use.
             Reselling, sharing or distributing the files to third parties is strictly prohibited.
           </p>
         </section>
         <section>
-          <h2 className="font-bold text-primary text-lg mt-6 mb-2">7. Support</h2>
+          <h2 className="font-bold text-primary text-lg mt-6 mb-2">6. Support</h2>
           <p>
             Customer support is available 7 days a week by email at ingenierie@civilplus.work and
             via WhatsApp at +237 650 000 749. Average response time is 12 hours.
           </p>
         </section>
         <section>
-          <h2 className="font-bold text-primary text-lg mt-6 mb-2">8. Liability</h2>
+          <h2 className="font-bold text-primary text-lg mt-6 mb-2">7. Liability</h2>
           <p>
             The calculation files and tools offered are design aids intended for qualified
             engineers. Civil+ cannot be held responsible for the consequences of use by an
@@ -166,7 +137,7 @@ export default function ConditionsUtilisation() {
           </p>
         </section>
         <section>
-          <h2 className="font-bold text-primary text-lg mt-6 mb-2">9. Applicable law</h2>
+          <h2 className="font-bold text-primary text-lg mt-6 mb-2">8. Applicable law</h2>
           <p>
             These terms are subject to Cameroonian law. Any dispute shall fall under the exclusive
             jurisdiction of the courts of Yaoundé.

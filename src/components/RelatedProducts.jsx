@@ -69,45 +69,52 @@ export default function RelatedProducts({ currentSlug, limit = 4 }) {
                     className="w-full h-full object-cover"
                     onError={(e) => { e.currentTarget.style.display = 'none'; }}
                   />
-                  <span className="absolute top-3 right-3 bg-black text-white text-[11px] font-bold px-2 py-0.5 rounded">
+                  <span className="absolute top-2 right-2 md:top-3 md:right-3 bg-black text-white text-[9px] md:text-[11px] font-bold px-1.5 py-0.5 rounded">
                     {discountPct}% OFF
                   </span>
                 </Link>
 
                 {/* Body */}
-                <div className="flex flex-col p-4 flex-1">
+                <div className="flex flex-col p-2.5 md:p-4 flex-1">
                   <Link
                     to={`/produits/${product.slug}`}
-                    className="text-sm font-bold text-primary leading-snug line-clamp-2 mb-3 hover:underline"
+                    className="text-[11px] md:text-sm font-bold text-primary leading-snug line-clamp-2 mb-2 md:mb-3 hover:underline"
                   >
                     {product.name}
                   </Link>
 
                   {/* "100% (N Avis)" */}
-                  <div className="flex items-center gap-1.5 text-xs text-gray-500 mb-3">
-                    <ThumbsUp size={13} className="text-gray-400" />
+                  <div className="flex items-center gap-1 text-[10px] md:text-xs text-gray-500 mb-2 md:mb-3">
+                    <ThumbsUp size={11} className="text-gray-400 md:hidden" />
+                    <ThumbsUp size={13} className="text-gray-400 hidden md:inline-block" />
                     <span>100% ({product.reviewCount} Avis)</span>
                   </div>
 
-                  <div className="flex items-baseline gap-2 mb-4 mt-auto">
-                    <span className="text-gray-400 line-through text-xs">
+                  <div className="flex items-baseline gap-1.5 mb-3 md:mb-4 mt-auto whitespace-nowrap">
+                    <span className="text-gray-400 line-through text-[9px] md:text-xs">
                       {convertPrice(product.oldPrice)}
                     </span>
-                    <span className="text-primary font-extrabold text-base">
+                    <span className="text-primary font-extrabold text-sm md:text-base">
                       {convertPrice(product.price)}
                     </span>
                   </div>
 
                   <button
                     onClick={handleBuy}
-                    className="flex items-center justify-center gap-1.5 bg-primary hover:bg-gray-800 text-white rounded-btn py-2.5 text-xs md:text-sm font-semibold transition-all"
+                    className="flex items-center justify-center gap-1 md:gap-1.5 bg-primary hover:bg-gray-800 text-white rounded-btn py-1.5 md:py-2.5 text-[10px] md:text-sm font-semibold transition-all"
                   >
                     {product.externalLink || product.checkoutLink ? (
-                      <ExternalLink size={14} />
+                      <ExternalLink size={12} className="md:hidden" />
                     ) : (
-                      <ShoppingCart size={14} />
+                      <ShoppingCart size={12} className="md:hidden" />
                     )}
-                    {t('product.buyNow')}
+                    {product.externalLink || product.checkoutLink ? (
+                      <ExternalLink size={14} className="hidden md:inline-block" />
+                    ) : (
+                      <ShoppingCart size={14} className="hidden md:inline-block" />
+                    )}
+                    <span className="md:hidden">Acheter</span>
+                    <span className="hidden md:inline">{t('product.buyNow')}</span>
                   </button>
                 </div>
               </motion.div>

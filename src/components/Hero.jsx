@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight, Play, Sparkles, Star, ShieldCheck, Users, Pause } from 'lucide-react';
 import { useI18n } from '../i18n/I18nContext';
+import { useCurrency } from '../hooks/useCurrency';
+import { products } from '../data/products';
 
 // ─── Slide data ──────────────────────────────────────────────────────────────
 function buildSlides(lang) {
@@ -156,6 +158,7 @@ const ROTATION_MS = 6000;
 
 export default function Hero() {
   const { t, lang } = useI18n();
+  const { convertPrice } = useCurrency();
   const slides = buildSlides(lang);
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -164,6 +167,14 @@ export default function Hero() {
   const [mouseTilt, setMouseTilt] = useState({ x: -2, y: 0 });
 
   const slide = slides[index];
+
+  // Look up the matching product so prices follow the currency switcher
+  const slideProduct = products.find((p) => p.slug === slide.productSlug);
+  const priceNew = slideProduct ? convertPrice(slideProduct.price) : slide.badge.priceNew;
+  const priceOld = slideProduct ? convertPrice(slideProduct.oldPrice) : slide.badge.priceOld;
+  const discountPct = slideProduct
+    ? Math.round((1 - slideProduct.price / slideProduct.oldPrice) * 100)
+    : parseInt(String(slide.badge.discount).replace(/[^0-9]/g, ''), 10) || 0;
 
   // Warm up all hero images upfront so every slide displays at the same
   // pace (no first-visit delay on the AVIF mockup).
@@ -404,7 +415,7 @@ export default function Hero() {
                   style={{ transform: 'rotate(-8deg)' }}
                 >
                   <p className="text-[10px] uppercase tracking-wider leading-none mb-0.5 opacity-90">Promo</p>
-                  <p className="text-lg md:text-xl leading-none">{slide.badge.discount} OFF</p>
+                  <p className="text-lg md:text-xl leading-none">-{discountPct}% OFF</p>
                 </motion.div>
 
                 {/* Floating mini-card — price */}
@@ -423,9 +434,9 @@ export default function Hero() {
                     </p>
                     <p className="text-xs font-bold text-primary leading-tight whitespace-nowrap">
                       <span className="text-gray-400 line-through text-[10px] mr-1 font-normal">
-                        {slide.badge.priceOld}
+                        {priceOld}
                       </span>
-                      {slide.badge.priceNew}
+                      {priceNew}
                     </p>
                   </div>
                 </motion.div>
